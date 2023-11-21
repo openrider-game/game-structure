@@ -78,7 +78,7 @@ To get a local copy up and running follow these steps.
    ```
 8. Start nodemon
    ```sh
-   npm run build
+   npm run dev
    ```
 9. Optionally, start live preview server to get live reload directly in VS Code
    

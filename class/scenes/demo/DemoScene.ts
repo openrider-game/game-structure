@@ -1,10 +1,10 @@
 import Scene from "../../core/scene/Scene";
-import DemoLayer from "./layers/DemoLayer";
+import DemoBackgroundLayer from "./layers/DemoBackgroundLayer";
+import DemoEventLayer from "./layers/DemoEventLayer";
 
 export default class DemoScene extends Scene {
-    constructor() {
-        super();
-
-        this.layers.set('demolayer', new DemoLayer());
-    }
+    initLayers(): void {
+        this.layers.push(new DemoBackgroundLayer());
+        this.layers.push(new DemoEventLayer());
+    }  
 }

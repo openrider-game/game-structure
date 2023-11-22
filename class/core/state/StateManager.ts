@@ -1,12 +1,12 @@
 import { STATES } from "../../constants/StateConstants";
 import Game from "../Game";
 import LifeCycle from "../interface/LifeCycle";
-import GameState from "./GameState";
+import State from "./State";
 
 export default class StateManager implements LifeCycle {
     game: Game;
-    states: Map<string, GameState>;
-    stateStack: Array<GameState>;
+    states: Map<string, State>;
+    stateStack: Array<State>;
 
     constructor(game: Game) {
         this.game = game;
@@ -35,7 +35,7 @@ export default class StateManager implements LifeCycle {
         return null;
     }
 
-    addState(stateClass: new (manager: StateManager) => GameState, name: string) {
+    addState(stateClass: new (manager: StateManager) => State, name: string) {
         let state = new stateClass(this);
         this.states.set(name, state);
     }

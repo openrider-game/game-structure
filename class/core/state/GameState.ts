@@ -1,16 +1,26 @@
 import LifeCycle from "../interface/LifeCycle";
+import Scene from "../scene/Scene";
 import StateManager from "./StateManager";
 
 export default abstract class GameState implements LifeCycle {
     manager: StateManager;
+    scenes: Map<string, Scene>;
+    currentScene: Scene | undefined;
 
     constructor(manager: StateManager) {
         this.manager = manager;
+
+        this.scenes = new Map();
     }
+
+    render(ctx: CanvasRenderingContext2D) {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        this.currentScene?.render(ctx);        
+    };
 
     abstract fixedUpdate(): void;
     abstract update(progress: number, delta: number): void;
-    abstract render(ctx: CanvasRenderingContext2D): void;
 
     abstract onEnter(): void;
     abstract onLeave(): void;

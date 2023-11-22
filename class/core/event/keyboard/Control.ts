@@ -1,11 +1,11 @@
 import { NONE } from "../../../constants/KeyboardConstants";
 
 export default class Control {
-    codes: string[];
+    codes: Array<string>;
     modifiers: number;
     fireOnce: boolean;
 
-    constructor(keyCodes: string | string[], modifiers = NONE, fireOnce = false) {
+    constructor(keyCodes: string | Array<string>, modifiers = NONE, fireOnce = false) {
         if (!Array.isArray(keyCodes)) {
             keyCodes = [keyCodes];
         }

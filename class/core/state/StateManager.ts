@@ -6,7 +6,7 @@ import GameState from "./GameState";
 export default class StateManager implements LifeCycle {
     game: Game;
     states: Map<string, GameState>;
-    stateStack: GameState[];
+    stateStack: Array<GameState>;
 
     constructor(game: Game) {
         this.game = game;

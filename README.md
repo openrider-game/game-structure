@@ -64,7 +64,7 @@ To get a local copy up and running follow these steps.
 ### Prerequisites
 
 * NPM
-* VS Code Live Preview extension (optional)
+* VS Code Live Server extension (optional)
 
 ### Installation
 

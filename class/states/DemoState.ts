@@ -1,13 +1,26 @@
 import GameState from "../core/state/GameState";
+import StateManager from "../core/state/StateManager";
+import DemoScene from "../scenes/demo/DemoScene";
 
 export default class DemoState extends GameState {
-    lastEvents: string[] = [];
+    lastEvents: Array<string>;
+    fixedUpdateCount: number;
+    lastFixedUpdate: string;
+    updateCount: number;
+    lastUpdate: string;
 
-    fixedUpdateCount: number = 0;
-    lastFixedUpdate: string = '';
-    
-    updateCount: number = 0;
-    lastUpdate: string = '';
+    constructor(stateManager: StateManager) {
+        super(stateManager);
+
+        this.scenes.set('demoscene', new DemoScene());
+        this.currentScene = this.scenes.get('demoscene');
+
+        this.lastEvents = new Array();
+        this.fixedUpdateCount = 0;
+        this.lastFixedUpdate = '';
+        this.updateCount = 0;
+        this.lastUpdate = '';
+    }
 
     pushEvent(event: string) {
         this.lastEvents.push(event);
@@ -74,7 +87,7 @@ export default class DemoState extends GameState {
     }
 
     render(ctx: CanvasRenderingContext2D): void {
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        super.render(ctx);
         
         ctx.fillText(this.lastFixedUpdate, 20, 20);
         ctx.fillText(this.lastUpdate, 20, 40);

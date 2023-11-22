@@ -66,11 +66,17 @@ export default class EventManager {
     }
 
     onKeyDown(e: KeyboardEvent): void {
-        this.game.stateManager.getCurrent()?.onKeyDown(e);
+        if (document.activeElement === document.body) {
+            e.preventDefault();
+            this.game.stateManager.getCurrent()?.onKeyDown(e);
+        }
     }
 
     onKeyUp(e: KeyboardEvent): void {
-        this.game.stateManager.getCurrent()?.onKeyUp(e);
+        if (document.activeElement === document.body) {
+            e.preventDefault();
+            this.game.stateManager.getCurrent()?.onKeyUp(e);
+        }
     }
 
 }

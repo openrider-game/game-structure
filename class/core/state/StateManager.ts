@@ -4,11 +4,11 @@ import LifeCycle from "../interface/LifeCycle";
 import State from "./State";
 
 export default class StateManager implements LifeCycle {
-    game: Game;
-    states: Map<string, State>;
-    stateStack: Array<State>;
+    public game: Game;
+    private states: Map<string, State>;
+    private stateStack: Array<State>;
 
-    constructor(game: Game) {
+    public constructor(game: Game) {
         this.game = game;
 
         this.states = new Map();
@@ -17,7 +17,7 @@ export default class StateManager implements LifeCycle {
         STATES.forEach((stateClass, name) => this.addState(stateClass, name));
     }
 
-    push(name: string) {
+    public push(name: string) {
         let state = this.getState(name);
         
         if(state) {
@@ -26,7 +26,7 @@ export default class StateManager implements LifeCycle {
         }
     }
 
-    pop() {
+    public pop() {
         if (this.stateStack.length) {
             this.getCurrent()?.onLeave();
             return this.stateStack.pop();
@@ -35,34 +35,34 @@ export default class StateManager implements LifeCycle {
         return null;
     }
 
-    addState(stateClass: new (manager: StateManager) => State, name: string) {
+    private addState(stateClass: new (manager: StateManager) => State, name: string) {
         let state = new stateClass(this);
         this.states.set(name, state);
     }
 
-    getState(name: string) {
+    public getState(name: string) {
         return this.states.get(name);
     }
 
-    fixedUpdate() {
+    public fixedUpdate() {
         if (this.stateStack.length) {
             this.getCurrent()?.fixedUpdate();
         }
     }
 
-    update(progress: number, delta: number) {
+    public update(progress: number, delta: number) {
         if (this.stateStack.length) {
             this.getCurrent()?.update(progress, delta);
         }
     }
 
-    render(ctx: CanvasRenderingContext2D) {
+    public render(ctx: CanvasRenderingContext2D) {
         if (this.stateStack.length) {
             this.getCurrent()?.render(ctx);
         }
     }
 
-    getCurrent() {
+    public getCurrent() {
         if(this.stateStack.length) {
             return this.stateStack[this.stateStack.length - 1];
         }

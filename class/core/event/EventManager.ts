@@ -2,15 +2,15 @@ import Game from "../Game";
 import Keyboard from "./keyboard/Keyboard";
 
 export default class EventManager {
-    game: Game;
-    keyboard: Keyboard;
+    public game: Game;
+    public keyboard: Keyboard;
 
-    constructor(game: Game) {
+    public constructor(game: Game) {
         this.game = game;
         this.keyboard = new Keyboard();
     }
 
-    attach() {
+    public attach() {
         this.game.ctx.canvas.addEventListener('mousedown', e => this.onMouseDown(e));
         this.game.ctx.canvas.addEventListener('mouseup', e => this.onMouseUp(e));
         this.game.ctx.canvas.addEventListener('mousemove', e => this.onMouseMove(e));
@@ -27,56 +27,55 @@ export default class EventManager {
         document.addEventListener('keyup', e => this.onKeyUp(e));
     }
 
-    onMouseDown(e: MouseEvent): void {
+    private onMouseDown(e: MouseEvent): void {
         e.preventDefault();
 
         this.game.stateManager.getCurrent()?.onMouseDown(e);
     }
 
-    onMouseUp(e: MouseEvent): void {
+    private onMouseUp(e: MouseEvent): void {
         this.game.stateManager.getCurrent()?.onMouseUp(e);
     }
 
-    onMouseMove(e: MouseEvent): void {
+    private onMouseMove(e: MouseEvent): void {
         this.game.stateManager.getCurrent()?.onMouseMove(e);
     }
 
-    onScroll(e: WheelEvent): void {
+    private onScroll(e: WheelEvent): void {
         e.preventDefault();
 
         this.game.stateManager.getCurrent()?.onScroll(e);
     }
 
-    onMouseEnter(e: MouseEvent): void {
+    private onMouseEnter(e: MouseEvent): void {
         this.game.stateManager.getCurrent()?.onMouseEnter(e);
     }
 
-    onMouseOut(e: MouseEvent): void {
+    private onMouseOut(e: MouseEvent): void {
         this.game.stateManager.getCurrent()?.onMouseOut(e);
     }
 
-    onContextMenu(e: MouseEvent): void {
+    private onContextMenu(e: MouseEvent): void {
         e.preventDefault();
 
         this.game.stateManager.getCurrent()?.onContextMenu(e);
     }
 
-    onVisibilityChange(): void {
+    private onVisibilityChange(): void {
         this.game.stateManager.getCurrent()?.onVisibilityChange();
     }
 
-    onKeyDown(e: KeyboardEvent): void {
+    private onKeyDown(e: KeyboardEvent): void {
         if (document.activeElement === document.body) {
             e.preventDefault();
             this.game.stateManager.getCurrent()?.onKeyDown(e);
         }
     }
 
-    onKeyUp(e: KeyboardEvent): void {
+    private onKeyUp(e: KeyboardEvent): void {
         if (document.activeElement === document.body) {
             e.preventDefault();
             this.game.stateManager.getCurrent()?.onKeyUp(e);
         }
     }
-
 }

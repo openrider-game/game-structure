@@ -3,25 +3,25 @@ import LifeCycle from "../interface/LifeCycle";
 import Layer from "./layer/Layer";
 
 export default abstract class Scene implements LifeCycle, EventHandler {
-    layers: Array<Layer>;
+    protected layers: Array<Layer>;
 
-    constructor() {
+    public constructor() {
         this.layers = new Array();
 
         this.initLayers();
     }
 
-    abstract initLayers(): void;
+    protected abstract initLayers(): void;
 
-    onEnter(): void {
+    public onEnter(): void {
         this.layers.forEach(layer => layer.onEnter());
     }
 
-    onLeave(): void {
+    public onLeave(): void {
         this.layers.forEach(layer => layer.onLeave());
     }
 
-    onMouseDown(e: MouseEvent): boolean {
+    public onMouseDown(e: MouseEvent): boolean {
         for (var i = this.layers.length - 1; i >= 0; i--) {
             if(!this.layers[i].onMouseDown(e)) {
                 break;
@@ -31,7 +31,7 @@ export default abstract class Scene implements LifeCycle, EventHandler {
         return true;
     }
 
-    onMouseUp(e: MouseEvent): boolean {
+    public onMouseUp(e: MouseEvent): boolean {
         for (var i = this.layers.length - 1; i >= 0; i--) {
             if(!this.layers[i].onMouseUp(e)) {
                 break;
@@ -41,7 +41,7 @@ export default abstract class Scene implements LifeCycle, EventHandler {
         return true;
     }
 
-    onMouseMove(e: MouseEvent): boolean {
+    public onMouseMove(e: MouseEvent): boolean {
         for (var i = this.layers.length - 1; i >= 0; i--) {
             if(!this.layers[i].onMouseMove(e)) {
                 break;
@@ -51,7 +51,7 @@ export default abstract class Scene implements LifeCycle, EventHandler {
         return true;
     }
 
-    onScroll(e: WheelEvent): boolean {
+    public onScroll(e: WheelEvent): boolean {
         for (var i = this.layers.length - 1; i >= 0; i--) {
             if(!this.layers[i].onScroll(e)) {
                 break;
@@ -61,15 +61,15 @@ export default abstract class Scene implements LifeCycle, EventHandler {
         return true;
     }
 
-    onMouseEnter(e: MouseEvent): void {
+    public onMouseEnter(e: MouseEvent): void {
         this.layers.forEach(layer => layer.onMouseEnter(e));
     }
 
-    onMouseOut(e: MouseEvent): void {
+    public onMouseOut(e: MouseEvent): void {
         this.layers.forEach(layer => layer.onMouseOut(e));
     }
 
-    onContextMenu(e: MouseEvent): boolean {
+    public onContextMenu(e: MouseEvent): boolean {
         for (var i = this.layers.length - 1; i >= 0; i--) {
             if(!this.layers[i].onContextMenu(e)) {
                 break;
@@ -79,27 +79,27 @@ export default abstract class Scene implements LifeCycle, EventHandler {
         return true;
     }
 
-    onVisibilityChange(): void {
+    public onVisibilityChange(): void {
         this.layers.forEach(layer => layer.onVisibilityChange());
     }
 
-    onKeyDown(e: KeyboardEvent): void {
+    public onKeyDown(e: KeyboardEvent): void {
         this.layers.forEach(layer => layer.onKeyDown(e));
     }
 
-    onKeyUp(e: KeyboardEvent): void {
+    public onKeyUp(e: KeyboardEvent): void {
         this.layers.forEach(layer => layer.onKeyUp(e));
     } 
 
-    fixedUpdate(): void {
+    public fixedUpdate(): void {
         this.layers.forEach(layer => layer.fixedUpdate());
     }
 
-    update(progress: number, delta: number): void {
+    public update(progress: number, delta: number): void {
         this.layers.forEach(layer => layer.update(progress, delta));
     }
 
-    render(ctx: CanvasRenderingContext2D): void {
+    public render(ctx: CanvasRenderingContext2D): void {
         this.layers.forEach(layer => layer.render(ctx));
     }
 }

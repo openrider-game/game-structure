@@ -29,6 +29,7 @@ export default class EventManager {
 
     private onMouseDown(e: MouseEvent): void {
         e.preventDefault();
+        this.game.ctx.canvas.focus();
 
         this.game.stateManager.getCurrent()?.onMouseDown(e);
     }
@@ -66,14 +67,14 @@ export default class EventManager {
     }
 
     private onKeyDown(e: KeyboardEvent): void {
-        if (document.activeElement === document.body) {
+        if (document.activeElement === this.game.ctx.canvas) {
             e.preventDefault();
             this.game.stateManager.getCurrent()?.onKeyDown(e);
         }
     }
 
     private onKeyUp(e: KeyboardEvent): void {
-        if (document.activeElement === document.body) {
+        if (document.activeElement === this.game.ctx.canvas) {
             e.preventDefault();
             this.game.stateManager.getCurrent()?.onKeyUp(e);
         }

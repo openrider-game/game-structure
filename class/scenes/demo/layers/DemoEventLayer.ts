@@ -1,13 +1,13 @@
 import Layer from "../../../core/scene/layer/Layer";
 
 export default class DemoEventLayer extends Layer {
-    lastEvents: Array<string>;
-    fixedUpdateCount: number;
-    lastFixedUpdate: string;
-    updateCount: number;
-    lastUpdate: string;
+    private lastEvents: Array<string>;
+    private fixedUpdateCount: number;
+    private lastFixedUpdate: string;
+    private updateCount: number;
+    private lastUpdate: string;
 
-    constructor() {
+    public constructor() {
         super();
 
         this.lastEvents = new Array();
@@ -17,7 +17,7 @@ export default class DemoEventLayer extends Layer {
         this.lastUpdate = '';
     }
 
-    pushEvent(event: string) {
+    private pushEvent(event: string) {
         this.lastEvents.push(event);
         
         if(this.lastEvents.length > 10) {
@@ -25,73 +25,73 @@ export default class DemoEventLayer extends Layer {
         }
     }
     
-    onEnter(): void {
+    public onEnter(): void {
         this.pushEvent('onEnter');
     }
 
-    onLeave(): void {
+    public onLeave(): void {
         this.pushEvent('onLeave');
     }
 
-    onMouseDown(e: MouseEvent): boolean {
+    public onMouseDown(e: MouseEvent): boolean {
         this.pushEvent(`onMouseDown ${e.clientX}, ${e.clientY}`);
 
-        return false;
+        return true;
     }
 
-    onMouseUp(e: MouseEvent): boolean {
+    public onMouseUp(e: MouseEvent): boolean {
         this.pushEvent(`onMouseUp ${e.clientX}, ${e.clientY}`);
         
         return true;
     }
 
-    onMouseMove(e: MouseEvent): boolean {
+    public onMouseMove(e: MouseEvent): boolean {
         this.pushEvent(`onMouseMove ${e.clientX}, ${e.clientY}`);
 
         return true;
     }
 
-    onScroll(e: WheelEvent): boolean {
+    public onScroll(e: WheelEvent): boolean {
         this.pushEvent(`onScroll ${-Math.sign(e.deltaY)}`);
 
         return true;
     }
 
-    onMouseEnter(e: MouseEvent): void {
+    public onMouseEnter(e: MouseEvent): void {
         this.pushEvent(`onMouseEnter ${e.clientX}, ${e.clientY}`);
     }
 
-    onMouseOut(e: MouseEvent): void {
+    public onMouseOut(e: MouseEvent): void {
         this.pushEvent(`onMouseOut ${e.clientX}, ${e.clientY}`);
     }
 
-    onContextMenu(e: MouseEvent): boolean {
+    public onContextMenu(e: MouseEvent): boolean {
         this.pushEvent(`onContextMenu ${e.clientX}, ${e.clientY}`);
 
         return true;
     }
 
-    onVisibilityChange(): void {
+    public onVisibilityChange(): void {
         this.pushEvent('visibilitychange');
     }
 
-    onKeyDown(e: KeyboardEvent): void {
+    public onKeyDown(e: KeyboardEvent): void {
         this.pushEvent(`onKeyDown ${e.code}`);
     }
 
-    onKeyUp(e: KeyboardEvent): void {
+    public onKeyUp(e: KeyboardEvent): void {
         this.pushEvent(`onKeyUp ${e.code}`);
     }
 
-    fixedUpdate(): void {
+    public fixedUpdate(): void {
         this.lastFixedUpdate = `Fixed update ${this.fixedUpdateCount++}`;
     }
 
-    update(progress: number, delta: number): void {
+    public update(progress: number, delta: number): void {
         this.lastUpdate = `Update ${this.updateCount++} - progress: ${progress}, delta: ${delta}`;
     }
 
-    render(ctx: CanvasRenderingContext2D): void {
+    public render(ctx: CanvasRenderingContext2D): void {
         ctx.fillText(this.lastFixedUpdate, 20, 20);
         ctx.fillText(this.lastUpdate, 20, 40);
         ctx.fillText(`Last events:`, 20, 60);

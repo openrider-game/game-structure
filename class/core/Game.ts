@@ -4,17 +4,14 @@ import EventManager from "./event/EventManager";
 import StateManager from "./state/StateManager";
 
 export default class Game {
-    ctx: CanvasRenderingContext2D;
-    stateManager: StateManager;
-    eventManager: EventManager;
-    lastTime: number;
-    timer: number;
-    frameDuration: number;
-    progress: number;
-    frames: number;
-    updates: number;
+    public ctx: CanvasRenderingContext2D;
+    public stateManager: StateManager;
+    public eventManager: EventManager;
+    public frameDuration: number;
+    private lastTime: number;
+    private progress: number;
 
-    constructor(canvas: HTMLCanvasElement) {
+    public constructor(canvas: HTMLCanvasElement) {
         this.ctx = canvas.getContext('2d')!;
 
         this.stateManager = new StateManager(this);
@@ -24,14 +21,11 @@ export default class Game {
         this.eventManager.attach();
 
         this.lastTime = performance.now();
-        this.timer = performance.now();
         this.frameDuration = 1000 / GAME_UPS;
         this.progress = 0;
-        this.frames = 0;
-        this.updates = 0;
     }
 
-    run() {
+    public run() {
         requestAnimationFrame(() => this.run());
 
         let now = performance.now();
@@ -46,19 +40,10 @@ export default class Game {
 
         while (this.progress >= 1) {
             this.stateManager.fixedUpdate();
-            this.updates++;
             this.progress--;
         }
 
         this.stateManager.update(this.progress, delta);
         this.stateManager.render(this.ctx);
-        this.frames++;
-
-        if (performance.now() - this.timer > 1000) {
-            this.timer = performance.now();
-
-            this.updates = 0;
-            this.frames = 0;
-        }
     }
 }

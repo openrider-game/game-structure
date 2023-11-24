@@ -1,7 +1,14 @@
 import EventHandler from "../../interface/EventHandler";
 import LifeCycle from "../../interface/LifeCycle";
+import Scene from "../Scene";
 
 export default abstract class Layer implements LifeCycle, EventHandler {
+    public scene: Scene;
+
+    public constructor(scene: Scene) {
+        this.scene = scene;
+    }
+
     public onEnter(): void {}
     public onLeave(): void {}
     public onMouseDown(_e: MouseEvent): boolean { return true; }

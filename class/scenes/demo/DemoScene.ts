@@ -4,7 +4,7 @@ import DemoEventLayer from "./layers/DemoEventLayer";
 
 export default class DemoScene extends Scene {
     protected initLayers(): void {
-        this.layers.push(new DemoBackgroundLayer());
-        this.layers.push(new DemoEventLayer());
+        this.layers.push(new DemoBackgroundLayer(this));
+        this.layers.push(new DemoEventLayer(this));
     }
 }

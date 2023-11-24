@@ -6,7 +6,7 @@ export default class DemoState extends State {
     public constructor(stateManager: StateManager) {
         super(stateManager);
 
-        this.scenes.set('demoscene', new DemoScene());
+        this.scenes.set('demoscene', new DemoScene(this));
         this.currentScene = this.scenes.get('demoscene');
     }
 }

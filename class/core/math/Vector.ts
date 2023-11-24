@@ -10,6 +10,10 @@ export default class Vector implements Cloneable<Vector>, Serializable {
         this.y = y;
     }
 
+    public toPixel(ctx: CanvasRenderingContext2D): Vector {
+        return new Vector(this.x + ctx.canvas.width / 2, this.y + ctx.canvas.height / 2);
+    }
+
     public set(vector: Vector): Vector {
         this.x = vector.x;
         this.y = vector.y;

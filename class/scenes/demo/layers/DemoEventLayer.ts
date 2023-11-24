@@ -1,4 +1,6 @@
+import Scene from "../../../core/scene/Scene";
 import Layer from "../../../core/scene/layer/Layer";
+import UiButton from "../../../core/ui/basic/button/UiButton";
 
 export default class DemoEventLayer extends Layer {
     private lastEvents: Array<string>;
@@ -7,14 +9,24 @@ export default class DemoEventLayer extends Layer {
     private updateCount: number;
     private lastUpdate: string;
 
-    public constructor() {
-        super();
+    button: UiButton;
+
+    public constructor(scene: Scene) {
+        super(scene);
 
         this.lastEvents = new Array();
         this.fixedUpdateCount = 0;
         this.lastFixedUpdate = '';
         this.updateCount = 0;
         this.lastUpdate = '';
+
+        this.button = new UiButton(this, () => this.pushEvent('Hello!'), {
+            x: 200,
+            y: 5,
+            width: 50,
+            height: 20,
+            label: 'Hello'
+        });
     }
 
     private pushEvent(event: string) {
@@ -36,17 +48,21 @@ export default class DemoEventLayer extends Layer {
     public onMouseDown(e: MouseEvent): boolean {
         this.pushEvent(`onMouseDown ${e.clientX}, ${e.clientY}`);
 
-        return true;
+        return this.button.onMouseDown(e);
     }
 
     public onMouseUp(e: MouseEvent): boolean {
         this.pushEvent(`onMouseUp ${e.clientX}, ${e.clientY}`);
         
+        this.button.onMouseUp(e);
+
         return true;
     }
 
     public onMouseMove(e: MouseEvent): boolean {
         this.pushEvent(`onMouseMove ${e.clientX}, ${e.clientY}`);
+
+        this.button.onMouseMove(e);
 
         return true;
     }
@@ -63,6 +79,8 @@ export default class DemoEventLayer extends Layer {
 
     public onMouseOut(e: MouseEvent): void {
         this.pushEvent(`onMouseOut ${e.clientX}, ${e.clientY}`);
+
+        this.button.onMouseOut(e);
     }
 
     public onContextMenu(e: MouseEvent): boolean {
@@ -99,5 +117,7 @@ export default class DemoEventLayer extends Layer {
         for(let i = 0; i < this.lastEvents.length; i++) {
             ctx.fillText(this.lastEvents[i], 30, 80 + 20 * i);
         }
+
+        this.button.render(ctx);
     }
 }

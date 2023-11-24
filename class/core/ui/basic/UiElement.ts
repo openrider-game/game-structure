@@ -1,8 +1,12 @@
 import EventHandler from "../../interface/EventHandler";
 import LifeCycle from "../../interface/LifeCycle";
 import Vector from "../../math/Vector";
+import Layer from "../../scene/layer/Layer";
+import UiElementOptions from "./UiElementOptions";
 
 export default abstract class UiElement implements LifeCycle, EventHandler {
+    public layer: Layer;
+
     public x: number;
     public y: number;
     public width: number;
@@ -10,26 +14,32 @@ export default abstract class UiElement implements LifeCycle, EventHandler {
     public hovered: boolean;
     public focused: boolean;
 
-    public constructor() {
-        this.x = 0;
-        this.y = 0;
-        this.width = 0;
-        this.height = 0;
+    public constructor(layer: Layer, options?: UiElementOptions) {
+        this.layer = layer;
+
+        this.x = options?.x || 0;
+        this.y = options?.y || 0;
+        this.width = options?.width || 0;
+        this.height = options?.height || 0;
 
         this.hovered = false;
         this.focused = false;
     }
 
-    protected abstract intersects(vec: Vector): boolean;
+    protected abstract intersects(pos: Vector): boolean;
     protected abstract onClick(): void;
 
     public abstract onEnter(): void;
     public abstract onLeave(): void;
 
     public onMouseDown(e: MouseEvent): boolean {
-        this.focused = this.intersects(new Vector(e.clientX, e.clientY));
+        let intersects = this.intersects(new Vector(e.clientX, e.clientY));
 
-        return !this.focused;
+        if(e.button === 0 && intersects) {
+            this.focused = true;
+        }
+
+        return !intersects;
     }
 
     public onMouseUp(e: MouseEvent): boolean {
@@ -38,11 +48,9 @@ export default abstract class UiElement implements LifeCycle, EventHandler {
         if (intersects && this.focused) {
             this.focused = false;
             this.onClick();
-
-            return false;
         }
 
-        return true;
+        return !intersects;
     }
 
     public onMouseMove(e: MouseEvent): boolean {
@@ -53,7 +61,7 @@ export default abstract class UiElement implements LifeCycle, EventHandler {
             this.focused = false;
         }
 
-        return true;
+        return !intersects;
     }
 
     public abstract onScroll(e: WheelEvent): boolean;

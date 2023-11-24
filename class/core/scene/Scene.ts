@@ -1,11 +1,15 @@
 import EventHandler from "../interface/EventHandler";
 import LifeCycle from "../interface/LifeCycle";
+import State from "../state/State";
 import Layer from "./layer/Layer";
 
 export default abstract class Scene implements LifeCycle, EventHandler {
+    public state: State;
     protected layers: Array<Layer>;
 
-    public constructor() {
+    public constructor(state: State) {
+        this.state = state;
+
         this.layers = new Array();
 
         this.initLayers();

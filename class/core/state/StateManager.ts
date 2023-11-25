@@ -11,16 +11,16 @@ export default class StateManager implements LifeCycle {
     public constructor(game: Game) {
         this.game = game;
 
-        this.states = new Map();
-        this.stateStack = new Array();
+        this.states = new Map<string, State>();
+        this.stateStack = new Array<State>();
 
         STATES.forEach((stateClass, name) => this.addState(stateClass, name));
     }
 
     public push(name: string) {
         let state = this.getState(name);
-        
-        if(state) {
+
+        if (state) {
             state.onEnter();
             this.stateStack.push(state);
         }
@@ -63,7 +63,7 @@ export default class StateManager implements LifeCycle {
     }
 
     public getCurrent() {
-        if(this.stateStack.length) {
+        if (this.stateStack.length) {
             return this.stateStack[this.stateStack.length - 1];
         }
     }

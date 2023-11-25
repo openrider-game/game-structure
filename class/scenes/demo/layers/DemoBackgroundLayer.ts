@@ -3,7 +3,7 @@ import Layer from "../../../core/scene/layer/Layer";
 
 export default class DemoBackgroundLayer extends Layer {
     focused: boolean;
-    
+
     public constructor(scene: Scene) {
         super(scene);
 
@@ -12,10 +12,10 @@ export default class DemoBackgroundLayer extends Layer {
 
     public onMouseDown(_e: MouseEvent): boolean {
         this.focused = true;
-    
+
         return true;
     }
-    
+
     public onMouseUp(_e: MouseEvent): boolean {
         this.focused = false;
 

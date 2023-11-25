@@ -7,9 +7,9 @@ export default class Keyboard {
     private firedOnce: Map<string, boolean>;
 
     public constructor() {
-        this.controls = new Map();
-        this.holding = new Map();
-        this.firedOnce = new Map();
+        this.controls = new Map<string, Control>();
+        this.holding = new Map<string, boolean>();
+        this.firedOnce = new Map<string, boolean>();
     }
 
     public registerControl(name: string, control: Control) {

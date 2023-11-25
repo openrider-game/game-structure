@@ -5,29 +5,31 @@ import Layer from "./layer/Layer";
 
 export default abstract class Scene implements LifeCycle, EventHandler {
     public state: State;
-    protected layers: Array<Layer>;
+    public layers: Map<string, Layer>;
+    protected layerStack: Array<Layer>;
 
     public constructor(state: State) {
         this.state = state;
 
-        this.layers = new Array();
+        this.layerStack = new Array<Layer>();
 
-        this.initLayers();
+        this.layers = this.initLayers();
+        this.layerStack.push(...this.layers.values());
     }
 
-    protected abstract initLayers(): void;
+    protected abstract initLayers(): Map<string, Layer>;
 
     public onEnter(): void {
-        this.layers.forEach(layer => layer.onEnter());
+        this.layerStack.forEach(layer => layer.onEnter());
     }
 
     public onLeave(): void {
-        this.layers.forEach(layer => layer.onLeave());
+        this.layerStack.forEach(layer => layer.onLeave());
     }
 
     public onMouseDown(e: MouseEvent): boolean {
-        for (var i = this.layers.length - 1; i >= 0; i--) {
-            if(!this.layers[i].onMouseDown(e)) {
+        for (var i = this.layerStack.length - 1; i >= 0; i--) {
+            if (!this.layerStack[i].onMouseDown(e)) {
                 break;
             }
         }
@@ -36,8 +38,8 @@ export default abstract class Scene implements LifeCycle, EventHandler {
     }
 
     public onMouseUp(e: MouseEvent): boolean {
-        for (var i = this.layers.length - 1; i >= 0; i--) {
-            if(!this.layers[i].onMouseUp(e)) {
+        for (var i = this.layerStack.length - 1; i >= 0; i--) {
+            if (!this.layerStack[i].onMouseUp(e)) {
                 break;
             }
         }
@@ -46,8 +48,8 @@ export default abstract class Scene implements LifeCycle, EventHandler {
     }
 
     public onMouseMove(e: MouseEvent): boolean {
-        for (var i = this.layers.length - 1; i >= 0; i--) {
-            if(!this.layers[i].onMouseMove(e)) {
+        for (var i = this.layerStack.length - 1; i >= 0; i--) {
+            if (!this.layerStack[i].onMouseMove(e)) {
                 break;
             }
         }
@@ -56,8 +58,8 @@ export default abstract class Scene implements LifeCycle, EventHandler {
     }
 
     public onScroll(e: WheelEvent): boolean {
-        for (var i = this.layers.length - 1; i >= 0; i--) {
-            if(!this.layers[i].onScroll(e)) {
+        for (var i = this.layerStack.length - 1; i >= 0; i--) {
+            if (!this.layerStack[i].onScroll(e)) {
                 break;
             }
         }
@@ -66,16 +68,16 @@ export default abstract class Scene implements LifeCycle, EventHandler {
     }
 
     public onMouseEnter(e: MouseEvent): void {
-        this.layers.forEach(layer => layer.onMouseEnter(e));
+        this.layerStack.forEach(layer => layer.onMouseEnter(e));
     }
 
     public onMouseOut(e: MouseEvent): void {
-        this.layers.forEach(layer => layer.onMouseOut(e));
+        this.layerStack.forEach(layer => layer.onMouseOut(e));
     }
 
     public onContextMenu(e: MouseEvent): boolean {
-        for (var i = this.layers.length - 1; i >= 0; i--) {
-            if(!this.layers[i].onContextMenu(e)) {
+        for (var i = this.layerStack.length - 1; i >= 0; i--) {
+            if (!this.layerStack[i].onContextMenu(e)) {
                 break;
             }
         }
@@ -84,26 +86,26 @@ export default abstract class Scene implements LifeCycle, EventHandler {
     }
 
     public onVisibilityChange(): void {
-        this.layers.forEach(layer => layer.onVisibilityChange());
+        this.layerStack.forEach(layer => layer.onVisibilityChange());
     }
 
     public onKeyDown(e: KeyboardEvent): void {
-        this.layers.forEach(layer => layer.onKeyDown(e));
+        this.layerStack.forEach(layer => layer.onKeyDown(e));
     }
 
     public onKeyUp(e: KeyboardEvent): void {
-        this.layers.forEach(layer => layer.onKeyUp(e));
-    } 
+        this.layerStack.forEach(layer => layer.onKeyUp(e));
+    }
 
     public fixedUpdate(): void {
-        this.layers.forEach(layer => layer.fixedUpdate());
+        this.layerStack.forEach(layer => layer.fixedUpdate());
     }
 
     public update(progress: number, delta: number): void {
-        this.layers.forEach(layer => layer.update(progress, delta));
+        this.layerStack.forEach(layer => layer.update(progress, delta));
     }
 
     public render(ctx: CanvasRenderingContext2D): void {
-        this.layers.forEach(layer => layer.render(ctx));
+        this.layerStack.forEach(layer => layer.render(ctx));
     }
 }

@@ -35,7 +35,7 @@ export default abstract class UiElement implements LifeCycle, EventHandler {
     public onMouseDown(e: MouseEvent): boolean {
         let intersects = this.intersects(new Vector(e.clientX, e.clientY));
 
-        if(e.button === 0 && intersects) {
+        if (e.button === 0 && intersects) {
             this.focused = true;
         }
 

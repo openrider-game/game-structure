@@ -11,9 +11,9 @@ export default interface EventHandler {
     onMouseOut(e: MouseEvent): void;
 
     onContextMenu(e: MouseEvent): boolean;
-    
+
     onVisibilityChange(): void;
-    
+
     onKeyDown(e: KeyboardEvent): void;
     onKeyUp(e: KeyboardEvent): void;
 }

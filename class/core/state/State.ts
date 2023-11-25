@@ -5,84 +5,86 @@ import StateManager from "./StateManager";
 
 export default abstract class State implements LifeCycle, EventHandler {
     public manager: StateManager;
-    public scenes: Map<string, Scene>;
+    public scene: Scene;
     protected currentScene: Scene | undefined;
 
     public constructor(manager: StateManager) {
         this.manager = manager;
 
-        this.scenes = new Map();
+        this.scene = this.initScene();
     }
-    
+
+    protected abstract initScene(): Scene;
+
     public onEnter(): void {
-        this.currentScene?.onEnter();
+        this.scene.onEnter();
     }
-    
+
     public onLeave(): void {
-        this.currentScene?.onLeave();
+        this.scene.onLeave();
     }
-    
+
     public onMouseDown(e: MouseEvent): boolean {
-        this.currentScene?.onMouseDown(e);
+        this.scene.onMouseDown(e);
 
         return true;
     }
-    
+
     public onMouseUp(e: MouseEvent): boolean {
-        this.currentScene?.onMouseUp(e);
+        this.scene.onMouseUp(e);
 
         return true;
     }
-    
+
     public onMouseMove(e: MouseEvent): boolean {
-        this.currentScene?.onMouseMove(e);
+        this.scene.onMouseMove(e);
 
         return true;
     }
-    
+
     public onScroll(e: WheelEvent): boolean {
-        this.currentScene?.onScroll(e);
+        this.scene.onScroll(e);
 
         return true;
     }
-    
+
     public onMouseEnter(e: MouseEvent): void {
-        this.currentScene?.onMouseEnter(e);
+        this.scene.onMouseEnter(e);
     }
-    
+
     public onMouseOut(e: MouseEvent): void {
-        this.currentScene?.onMouseOut(e);
+        this.scene.onMouseOut(e);
     }
-    
+
     public onContextMenu(e: MouseEvent): boolean {
-        this.currentScene?.onContextMenu(e);
-        
+        this.scene.onContextMenu(e);
+
         return true;
     }
-    
+
     public onVisibilityChange(): void {
-        this.currentScene?.onVisibilityChange();
+        this.scene.onVisibilityChange();
     }
-    
+
     public onKeyDown(e: KeyboardEvent): void {
-        this.currentScene?.onKeyDown(e);
+        this.scene.onKeyDown(e);
     }
-    
+
     public onKeyUp(e: KeyboardEvent): void {
-        this.currentScene?.onKeyUp(e);
+        this.scene.onKeyUp(e);
     }
-    
+
     public fixedUpdate(): void {
-        this.currentScene?.fixedUpdate();
+        this.scene.fixedUpdate();
     }
-    
+
     public update(progress: number, delta: number): void {
-        this.currentScene?.update(progress, delta);
+        this.scene.update(progress, delta);
     }
 
     public render(ctx: CanvasRenderingContext2D) {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-        this.currentScene?.render(ctx);
+        this.scene.render(ctx);
     };
 }

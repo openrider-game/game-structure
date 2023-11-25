@@ -14,7 +14,7 @@ export default class DemoEventLayer extends Layer {
     public constructor(scene: Scene) {
         super(scene);
 
-        this.lastEvents = new Array();
+        this.lastEvents = new Array<string>();
         this.fixedUpdateCount = 0;
         this.lastFixedUpdate = '';
         this.updateCount = 0;
@@ -31,12 +31,12 @@ export default class DemoEventLayer extends Layer {
 
     private pushEvent(event: string) {
         this.lastEvents.push(event);
-        
-        if(this.lastEvents.length > 10) {
+
+        if (this.lastEvents.length > 10) {
             this.lastEvents.shift();
         }
     }
-    
+
     public onEnter(): void {
         this.pushEvent('onEnter');
     }
@@ -53,7 +53,7 @@ export default class DemoEventLayer extends Layer {
 
     public onMouseUp(e: MouseEvent): boolean {
         this.pushEvent(`onMouseUp ${e.clientX}, ${e.clientY}`);
-        
+
         this.button.onMouseUp(e);
 
         return true;
@@ -114,7 +114,7 @@ export default class DemoEventLayer extends Layer {
         ctx.fillText(this.lastUpdate, 20, 40);
         ctx.fillText(`Last events:`, 20, 60);
 
-        for(let i = 0; i < this.lastEvents.length; i++) {
+        for (let i = 0; i < this.lastEvents.length; i++) {
             ctx.fillText(this.lastEvents[i], 30, 80 + 20 * i);
         }
 

@@ -1,15 +1,13 @@
 import Scene from "../../../core/scene/Scene";
-import Layer from "../../../core/scene/layer/Layer";
+import UiLayer from "../../../core/scene/layer/UiLayer";
 import UiButton from "../../../core/ui/basic/button/UiButton";
 
-export default class DemoEventLayer extends Layer {
+export default class DemoEventLayer extends UiLayer {
     private lastEvents: Array<string>;
     private fixedUpdateCount: number;
     private lastFixedUpdate: string;
     private updateCount: number;
     private lastUpdate: string;
-
-    button: UiButton;
 
     public constructor(scene: Scene) {
         super(scene);
@@ -20,13 +18,13 @@ export default class DemoEventLayer extends Layer {
         this.updateCount = 0;
         this.lastUpdate = '';
 
-        this.button = new UiButton(this, () => this.pushEvent('Hello!'), {
+        this.uiElements.push(new UiButton(this, () => this.pushEvent('Hello!'), {
             x: 200,
             y: 5,
             width: 50,
             height: 20,
             label: 'Hello'
-        });
+        }));
     }
 
     private pushEvent(event: string) {
@@ -48,23 +46,19 @@ export default class DemoEventLayer extends Layer {
     public onMouseDown(e: MouseEvent): boolean {
         this.pushEvent(`onMouseDown ${e.clientX}, ${e.clientY}`);
 
-        return this.button.onMouseDown(e);
+        return super.onMouseDown(e);
     }
 
     public onMouseUp(e: MouseEvent): boolean {
         this.pushEvent(`onMouseUp ${e.clientX}, ${e.clientY}`);
 
-        this.button.onMouseUp(e);
-
-        return true;
+        return super.onMouseUp(e);
     }
 
     public onMouseMove(e: MouseEvent): boolean {
         this.pushEvent(`onMouseMove ${e.clientX}, ${e.clientY}`);
 
-        this.button.onMouseMove(e);
-
-        return true;
+        return super.onMouseMove(e);
     }
 
     public onScroll(e: WheelEvent): boolean {
@@ -80,13 +74,13 @@ export default class DemoEventLayer extends Layer {
     public onMouseOut(e: MouseEvent): void {
         this.pushEvent(`onMouseOut ${e.clientX}, ${e.clientY}`);
 
-        this.button.onMouseOut(e);
+        super.onMouseOut(e);
     }
 
     public onContextMenu(e: MouseEvent): boolean {
         this.pushEvent(`onContextMenu ${e.clientX}, ${e.clientY}`);
 
-        return true;
+        return super.onContextMenu(e);
     }
 
     public onVisibilityChange(): void {
@@ -118,6 +112,6 @@ export default class DemoEventLayer extends Layer {
             ctx.fillText(this.lastEvents[i], 30, 80 + 20 * i);
         }
 
-        this.button.render(ctx);
+        super.render(ctx);
     }
 }

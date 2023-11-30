@@ -1,6 +1,6 @@
-import Scene from "../../../core/scene/Scene";
-import UiLayer from "../../../core/scene/layer/UiLayer";
-import UiButton from "../../../core/ui/basic/button/UiButton";
+import State from "../../core/state/State";
+import UiLayer from "../../core/state/layer/UiLayer";
+import UiButton from "../../core/ui/basic/button/UiButton";
 
 export default class DemoEventLayer extends UiLayer {
     private lastEvents: Array<string>;
@@ -9,8 +9,8 @@ export default class DemoEventLayer extends UiLayer {
     private updateCount: number;
     private lastUpdate: string;
 
-    public constructor(scene: Scene) {
-        super(scene);
+    public constructor(state: State) {
+        super(state);
 
         this.lastEvents = new Array<string>();
         this.fixedUpdateCount = 0;

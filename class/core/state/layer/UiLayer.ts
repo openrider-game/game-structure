@@ -1,12 +1,12 @@
 import UiElement from "../../ui/basic/UiElement";
-import Scene from "../Scene";
+import State from "../State";
 import Layer from "./Layer";
 
 export default abstract class UiLayer extends Layer {
     uiElements: Array<UiElement>;
 
-    constructor(scene: Scene) {
-        super(scene);
+    constructor(state: State) {
+        super(state);
 
         this.uiElements = new Array<UiElement>();
     }

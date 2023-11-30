@@ -1,7 +1,7 @@
 import EventHandler from "../../interface/EventHandler";
 import LifeCycle from "../../interface/LifeCycle";
 import Vector from "../../math/Vector";
-import Layer from "../../scene/layer/Layer";
+import Layer from "../../state/layer/Layer";
 import UiElementOptions from "./UiElementOptions";
 
 export default abstract class UiElement implements LifeCycle, EventHandler {

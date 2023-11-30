@@ -1,11 +1,11 @@
-import Scene from "../../../core/scene/Scene";
-import Layer from "../../../core/scene/layer/Layer";
+import State from "../../core/state/State";
+import Layer from "../../core/state/layer/Layer";
 
 export default class DemoBackgroundLayer extends Layer {
     focused: boolean;
 
-    public constructor(scene: Scene) {
-        super(scene);
+    public constructor(state: State) {
+        super(state);
 
         this.focused = false;
     }

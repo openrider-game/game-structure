@@ -1,5 +1,5 @@
 import Vector from "../../../math/Vector";
-import Layer from "../../../scene/layer/Layer";
+import Layer from "../../../state/layer/Layer";
 import UiElement from "../UiElement";
 import UiButtonOptions from "./UiButtonOptions";
 
@@ -27,7 +27,7 @@ export default class UiButton extends UiElement {
     }
 
     protected intersects(pos: Vector): boolean {
-        let ctx = this.layer.scene.state.manager.game.ctx;
+        let ctx = this.layer.state.manager.game.ctx;
         let canvasRect = ctx.canvas.getBoundingClientRect();
         let mousePos = new Vector(pos.x - canvasRect.left + window.scrollX, pos.y - canvasRect.top + window.scrollY);
 

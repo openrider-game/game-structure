@@ -1,90 +1,113 @@
 import EventHandler from "../interface/EventHandler";
 import LifeCycle from "../interface/LifeCycle";
-import Scene from "../scene/Scene";
+import Layer from "./layer/Layer";
 import StateManager from "./StateManager";
 
 export default abstract class State implements LifeCycle, EventHandler {
     public manager: StateManager;
-    public scene: Scene;
-    protected currentScene: Scene | undefined;
+    public layers: Map<string, Layer>;
+    protected layerStack: Array<Layer>;
 
     public constructor(manager: StateManager) {
         this.manager = manager;
 
-        this.scene = this.initScene();
+        this.layerStack = new Array<Layer>();
+
+        this.layers = this.initLayers();
+        this.layerStack.push(...this.layers.values());
     }
 
-    protected abstract initScene(): Scene;
+    protected abstract initLayers(): Map<string, Layer>;
 
     public onEnter(): void {
-        this.scene.onEnter();
+        this.layerStack.forEach(layer => layer.onEnter());
     }
 
     public onLeave(): void {
-        this.scene.onLeave();
+        this.layerStack.forEach(layer => layer.onLeave());
     }
 
     public onMouseDown(e: MouseEvent): boolean {
-        this.scene.onMouseDown(e);
+        for (var i = this.layerStack.length - 1; i >= 0; i--) {
+            if (!this.layerStack[i].onMouseDown(e)) {
+                break;
+            }
+        }
 
         return true;
     }
 
     public onMouseUp(e: MouseEvent): boolean {
-        this.scene.onMouseUp(e);
+        for (var i = this.layerStack.length - 1; i >= 0; i--) {
+            if (!this.layerStack[i].onMouseUp(e)) {
+                break;
+            }
+        }
 
         return true;
     }
 
     public onMouseMove(e: MouseEvent): boolean {
-        this.scene.onMouseMove(e);
+        for (var i = this.layerStack.length - 1; i >= 0; i--) {
+            if (!this.layerStack[i].onMouseMove(e)) {
+                break;
+            }
+        }
 
         return true;
     }
 
     public onScroll(e: WheelEvent): boolean {
-        this.scene.onScroll(e);
+        for (var i = this.layerStack.length - 1; i >= 0; i--) {
+            if (!this.layerStack[i].onScroll(e)) {
+                break;
+            }
+        }
 
         return true;
     }
 
     public onMouseEnter(e: MouseEvent): void {
-        this.scene.onMouseEnter(e);
+        this.layerStack.forEach(layer => layer.onMouseEnter(e));
     }
 
     public onMouseOut(e: MouseEvent): void {
-        this.scene.onMouseOut(e);
+        this.layerStack.forEach(layer => layer.onMouseOut(e));
     }
 
     public onContextMenu(e: MouseEvent): boolean {
-        this.scene.onContextMenu(e);
+        for (var i = this.layerStack.length - 1; i >= 0; i--) {
+            if (!this.layerStack[i].onContextMenu(e)) {
+                break;
+            }
+        }
 
         return true;
     }
 
     public onVisibilityChange(): void {
-        this.scene.onVisibilityChange();
+        this.layerStack.forEach(layer => layer.onVisibilityChange());
     }
 
     public onKeyDown(e: KeyboardEvent): void {
-        this.scene.onKeyDown(e);
+        this.layerStack.forEach(layer => layer.onKeyDown(e));
     }
 
     public onKeyUp(e: KeyboardEvent): void {
-        this.scene.onKeyUp(e);
+        this.layerStack.forEach(layer => layer.onKeyUp(e));
     }
 
     public fixedUpdate(): void {
-        this.scene.fixedUpdate();
+        this.layerStack.forEach(layer => layer.fixedUpdate());
     }
 
     public update(progress: number, delta: number): void {
-        this.scene.update(progress, delta);
+        this.layerStack.forEach(layer => layer.update(progress, delta));
     }
 
-    public render(ctx: CanvasRenderingContext2D) {
+    public render(ctx: CanvasRenderingContext2D): void {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-        this.scene.render(ctx);
-    };
+        this.layerStack.forEach(layer => layer.render(ctx));
+    }
 }

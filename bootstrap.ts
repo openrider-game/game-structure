@@ -24,7 +24,7 @@ function setCanvasSize() {
 function setContextProperties(ctx: CanvasRenderingContext2D) {
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.font = 'bold 15px Ubuntu';
+    ctx.font = 'bold 15px monospace';
 }
 
 function newGame() {

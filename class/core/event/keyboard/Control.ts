@@ -1,4 +1,4 @@
-import { NONE } from "../../../constants/KeyboardConstants";
+import { NONE } from "./KeyboardConstants";
 
 export default class Control {
     public codes: Array<string>;

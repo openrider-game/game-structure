@@ -96,11 +96,11 @@ export default class DemoEventLayer extends UiLayer {
     }
 
     public fixedUpdate(): void {
-        this.lastFixedUpdate = `Fixed update ${this.fixedUpdateCount++}`;
+        this.lastFixedUpdate = `Fixed update ${(this.fixedUpdateCount++).toString().padStart(6, '0')}`;
     }
 
     public update(progress: number, delta: number): void {
-        this.lastUpdate = `Update ${this.updateCount++} - progress: ${progress}, delta: ${delta}`;
+        this.lastUpdate = `Update ${(this.updateCount++).toString().padStart(6, '0')} - progress: ${progress.toFixed(4)}, delta: ${delta}`;
     }
 
     public render(ctx: CanvasRenderingContext2D): void {

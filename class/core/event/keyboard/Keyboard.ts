@@ -1,4 +1,4 @@
-import { ALT, CTRL, NONE, SHIFT } from "../../../constants/KeyboardConstants";
+import { ALT, CTRL, NONE, SHIFT } from "./KeyboardConstants";
 import Control from "./Control";
 
 export default class Keyboard {

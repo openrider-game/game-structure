@@ -1,4 +1,4 @@
-import { STATES } from "../../constants/StateConstants";
+import { STATES } from "../../states/constants/StateConstants";
 import Game from "../Game";
 import LifeCycle from "../interface/LifeCycle";
 import State from "./State";

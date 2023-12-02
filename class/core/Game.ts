@@ -1,5 +1,5 @@
-import { GAME_UPS } from "../constants/GameConstants";
-import { DEMO_STATE } from "../constants/StateConstants";
+import { GAME_UPS } from "./constants/GameConstants";
+import { MAIN_STATE } from "../states/constants/StateConstants";
 import EventManager from "./event/EventManager";
 import StateManager from "./state/StateManager";
 
@@ -15,7 +15,7 @@ export default class Game {
         this.ctx = canvas.getContext('2d')!;
 
         this.stateManager = new StateManager(this);
-        this.stateManager.push(DEMO_STATE);
+        this.stateManager.push(MAIN_STATE);
 
         this.eventManager = new EventManager(this);
         this.eventManager.attach();

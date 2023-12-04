@@ -2,7 +2,7 @@ import State from "../../core/state/State";
 import Layer from "../../core/state/layer/Layer";
 
 export default class DemoBackgroundLayer extends Layer {
-    focused: boolean;
+    private focused: boolean;
 
     public constructor(state: State) {
         super(state);

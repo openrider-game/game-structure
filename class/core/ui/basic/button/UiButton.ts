@@ -4,16 +4,16 @@ import UiElement from "../UiElement";
 import UiButtonOptions from "./UiButtonOptions";
 
 export default class UiButton extends UiElement {
-    label: string;
+    public label: string;
 
-    color: string | CanvasGradient | CanvasPattern;
-    hoveredColor: string | CanvasGradient | CanvasPattern;
-    focusedColor: string | CanvasGradient | CanvasPattern;
-    textColor: string | CanvasGradient | CanvasPattern;
+    public color: string | CanvasGradient | CanvasPattern;
+    public hoveredColor: string | CanvasGradient | CanvasPattern;
+    public focusedColor: string | CanvasGradient | CanvasPattern;
+    public textColor: string | CanvasGradient | CanvasPattern;
 
-    callback: () => void;
+    private callback: () => void;
 
-    constructor(layer: Layer, callback: () => void, options?: UiButtonOptions) {
+    public constructor(layer: Layer, callback: () => void, options?: UiButtonOptions) {
         super(layer, options);
 
         this.callback = callback;

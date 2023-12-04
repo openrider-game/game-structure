@@ -3,9 +3,9 @@ import State from "../State";
 import Layer from "./Layer";
 
 export default abstract class UiLayer extends Layer {
-    uiElements: Array<UiElement>;
+    public uiElements: Array<UiElement>;
 
-    constructor(state: State) {
+    public constructor(state: State) {
         super(state);
 
         this.uiElements = new Array<UiElement>();

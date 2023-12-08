@@ -3,10 +3,10 @@ import StateManager from "../../core/state/StateManager";
 import DemoState from "../demo/DemoState";
 
 export const
-    DEMO_STATE = 'DEMO_STATE',
+    STATE_DEMO = 'STATE_DEMO',
 
     STATES = new Map<string, new (manager: StateManager) => State>([
-        [DEMO_STATE, DemoState]
+        [STATE_DEMO, DemoState]
     ]),
 
-    MAIN_STATE = DEMO_STATE;
+    MAIN_STATE = STATE_DEMO;

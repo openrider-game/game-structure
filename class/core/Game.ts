@@ -3,47 +3,52 @@ import { MAIN_STATE } from "../states/constants/StateConstants";
 import EventManager from "./event/EventManager";
 import StateManager from "./state/StateManager";
 
-export default class Game {
-    public ctx: CanvasRenderingContext2D;
-    public stateManager: StateManager;
-    public eventManager: EventManager;
-    public frameDuration: number;
-    private lastTime: number;
-    private progress: number;
+export default abstract class Game {
+    public static ctx: CanvasRenderingContext2D;
 
-    public constructor(canvas: HTMLCanvasElement) {
-        this.ctx = canvas.getContext('2d')!;
+    public static stateManager: StateManager;
+    public static eventManager: EventManager;
+    public static objects: Map<string, any>;
 
-        this.stateManager = new StateManager(this);
-        this.stateManager.push(MAIN_STATE);
+    public static frameDuration: number;
+    private static lastTime: number;
+    private static progress: number;
 
-        this.eventManager = new EventManager(this);
-        this.eventManager.attach();
+    public static init(canvas: HTMLCanvasElement) {
+        Game.ctx = canvas.getContext('2d')!;
 
-        this.lastTime = performance.now();
-        this.frameDuration = 1000 / GAME_UPS;
-        this.progress = 0;
+        Game.stateManager = new StateManager();
+        Game.stateManager.push(MAIN_STATE);
+
+        Game.eventManager = new EventManager();
+        Game.eventManager.attach();
+
+        Game.objects = new Map<string, any>();
+
+        Game.lastTime = performance.now();
+        Game.frameDuration = 1000 / GAME_UPS;
+        Game.progress = 0;
     }
 
-    public run() {
-        requestAnimationFrame(() => this.run());
+    public static run() {
+        requestAnimationFrame(() => Game.run());
 
         let now = performance.now();
-        let delta = now - this.lastTime;
+        let delta = now - Game.lastTime;
 
         if (delta > 1000) {
-            delta = this.frameDuration;
+            delta = Game.frameDuration;
         }
 
-        this.progress += delta / this.frameDuration;
-        this.lastTime = now;
+        Game.progress += delta / Game.frameDuration;
+        Game.lastTime = now;
 
-        while (this.progress >= 1) {
-            this.stateManager.fixedUpdate();
-            this.progress--;
+        while (Game.progress >= 1) {
+            Game.stateManager.fixedUpdate();
+            Game.progress--;
         }
 
-        this.stateManager.update(this.progress, delta);
-        this.stateManager.render(this.ctx);
+        Game.stateManager.update(Game.progress, delta);
+        Game.stateManager.render(Game.ctx);
     }
 }

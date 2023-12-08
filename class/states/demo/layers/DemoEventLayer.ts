@@ -1,6 +1,6 @@
-import State from "../../core/state/State";
-import UiLayer from "../../core/state/layer/UiLayer";
-import UiButton from "../../core/ui/basic/button/UiButton";
+import State from "../../../core/state/State";
+import UiLayer from "../../../core/state/layer/UiLayer";
+import UiButton from "../../../core/ui/basic/button/UiButton";
 
 export default class DemoEventLayer extends UiLayer {
     private lastEvents: Array<string>;

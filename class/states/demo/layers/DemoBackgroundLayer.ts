@@ -1,5 +1,5 @@
-import State from "../../core/state/State";
-import Layer from "../../core/state/layer/Layer";
+import State from "../../../core/state/State";
+import Layer from "../../../core/state/layer/Layer";
 
 export default class DemoBackgroundLayer extends Layer {
     private focused: boolean;

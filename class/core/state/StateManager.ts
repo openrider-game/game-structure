@@ -1,15 +1,12 @@
 import { STATES } from "../../states/constants/StateConstants";
-import Game from "../Game";
 import LifeCycle from "../interface/LifeCycle";
 import State from "./State";
 
 export default class StateManager implements LifeCycle {
-    public game: Game;
     private states: Map<string, State>;
     private stateStack: Array<State>;
 
-    public constructor(game: Game) {
-        this.game = game;
+    public constructor() {
 
         this.states = new Map<string, State>();
         this.stateStack = new Array<State>();

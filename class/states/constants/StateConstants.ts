@@ -1,6 +1,6 @@
 import State from "../../core/state/State";
 import StateManager from "../../core/state/StateManager";
-import DemoState from "../DemoState";
+import DemoState from "../demo/DemoState";
 
 export const
     DEMO_STATE = 'DEMO_STATE',

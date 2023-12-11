@@ -19,6 +19,7 @@ export default class StateManager implements LifeCycle {
 
         if (state) {
             state.onEnter();
+            this.getCurrent()?.onLeave();
             this.stateStack.push(state);
         }
     }
@@ -26,7 +27,9 @@ export default class StateManager implements LifeCycle {
     public pop() {
         if (this.stateStack.length) {
             this.getCurrent()?.onLeave();
-            return this.stateStack.pop();
+            let poppedState = this.stateStack.pop();
+            this.getCurrent()?.onEnter();
+            return poppedState;
         }
 
         return null;

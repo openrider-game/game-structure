@@ -5,7 +5,6 @@ if (!document.createElement('canvas').getContext) {
 }
 
 let canvas: HTMLCanvasElement = document.querySelector('[data-play=game]')!;
-let options: Map<string, any> = new Map<string, any>();
 
 window.addEventListener('resize', (e) => setCanvasSize());
 setCanvasSize();
@@ -27,13 +26,11 @@ function setContextProperties(ctx: CanvasRenderingContext2D) {
     ctx.font = 'bold 15px monospace';
 }
 
-function newGame() {
-    Game.init(canvas);
-    Game.objects = options;
+function newGame(options?: Map<string, any>) {
+    Game.init(canvas, options || new Map<string, any>());
     Game.run();
 }
 
 export const API = {
-    'newGame': newGame,
-    'options': options
+    'newGame': newGame
 }

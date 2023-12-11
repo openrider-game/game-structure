@@ -14,16 +14,16 @@ export default abstract class Game {
     private static lastTime: number;
     private static progress: number;
 
-    public static init(canvas: HTMLCanvasElement) {
+    public static init(canvas: HTMLCanvasElement, options: Map<string, any>) {
         Game.ctx = canvas.getContext('2d')!;
+
+        Game.objects = options;
 
         Game.stateManager = new StateManager();
         Game.stateManager.push(MAIN_STATE);
 
         Game.eventManager = new EventManager();
         Game.eventManager.attach();
-
-        Game.objects = new Map<string, any>();
 
         Game.lastTime = performance.now();
         Game.frameDuration = 1000 / GAME_UPS;

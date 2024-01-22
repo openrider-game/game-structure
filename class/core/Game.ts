@@ -30,7 +30,7 @@ export default abstract class Game {
         Game.progress = 0;
     }
 
-    public static run() {
+    public static run(): void {
         requestAnimationFrame(() => Game.run());
 
         let now = performance.now();

@@ -3,6 +3,10 @@ import LifeCycle from "../interface/LifeCycle";
 import Layer from "./layer/Layer";
 import StateManager from "./StateManager";
 
+export type StateConstructor<T extends State> = {
+    new(manager: StateManager): T;
+}
+
 export default abstract class State implements LifeCycle, EventHandler {
     public manager: StateManager;
     public layers: Map<string, Layer>;

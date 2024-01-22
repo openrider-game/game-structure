@@ -12,11 +12,11 @@ export default class Keyboard {
         this.firedOnce = new Map<string, boolean>();
     }
 
-    public registerControl(name: string, control: Control) {
+    public registerControl(name: string, control: Control): void {
         this.controls.set(name, control);
     }
 
-    public isDown(name: string) {
+    public isDown(name: string): boolean {
         let holding = !!this.holding.get(name);
         let fireOnce = this.controls.get(name)?.fireOnce;
         let firedOnce = !!this.firedOnce.get(name);
@@ -29,9 +29,7 @@ export default class Keyboard {
         return holding && (!fireOnce || !firedOnce);
     }
 
-    private test(control: Control, e: KeyboardEvent) {
-        console.log(e.code);
-
+    private test(control: Control, e: KeyboardEvent): boolean {
         let matches = control.codes.includes(e.code);
         if (matches && control.modifiers === NONE) {
             matches = !e.ctrlKey && !e.altKey && !e.shiftKey;
@@ -48,7 +46,7 @@ export default class Keyboard {
         return matches;
     }
 
-    public onKeyDown(e: KeyboardEvent) {
+    public onKeyDown(e: KeyboardEvent): void {
         this.controls.forEach((control, key) => {
             if (this.test(control, e)) {
                 e.preventDefault();
@@ -60,7 +58,7 @@ export default class Keyboard {
         });
     }
 
-    public onKeyUp(e: KeyboardEvent) {
+    public onKeyUp(e: KeyboardEvent): void {
         this.controls.forEach((control, key) => {
             if (this.test(control, e)) {
                 e.preventDefault();

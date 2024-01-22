@@ -8,7 +8,7 @@ export default class EventManager {
         this.keyboard = new Keyboard();
     }
 
-    public attach() {
+    public attach(): void {
         Game.ctx.canvas.addEventListener('mousedown', e => this.onMouseDown(e));
         Game.ctx.canvas.addEventListener('mouseup', e => this.onMouseUp(e));
         Game.ctx.canvas.addEventListener('mousemove', e => this.onMouseMove(e));

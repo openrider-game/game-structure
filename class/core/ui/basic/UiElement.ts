@@ -76,6 +76,8 @@ export default abstract class UiElement implements LifeCycle, EventHandler {
     public abstract onVisibilityChange(): void;
     public abstract onKeyDown(e: KeyboardEvent): void;
     public abstract onKeyUp(e: KeyboardEvent): void;
+    public abstract onKeyboardDown(e: CustomEventInit<any>): void;
+    public abstract onKeyboardUp(e: CustomEventInit<any>): void;
 
     public abstract fixedUpdate(): void;
     public abstract update(progress: number, delta: number): void;

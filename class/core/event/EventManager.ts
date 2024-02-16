@@ -1,6 +1,8 @@
 import Game from "../Game";
 import EventHandler from "../interface/EventHandler";
 import Vector from "../math/Vector";
+import { OBJ_WORLD } from "../world/WorldConstants";
+import WorldVector from "../world/WorldVector";
 import Keyboard from "./keyboard/Keyboard";
 import Mouse from "./mouse/Mouse";
 
@@ -32,7 +34,7 @@ export default class EventManager implements EventHandler {
         Game.ctx.canvas.focus();
 
         this.setMousePos(e);
-        Mouse.lastClick = Mouse.mousePos;
+        Mouse.lastClick.set(Mouse.mousePos);
 
         Game.stateManager.getCurrent()?.onMouseDown(e);
 
@@ -106,10 +108,12 @@ export default class EventManager implements EventHandler {
     }
 
     private setMousePos(e: MouseEvent): void {
+        let world = Game.objects.get(OBJ_WORLD);
+
         let canvasRect = Game.ctx.canvas.getBoundingClientRect();
-        Mouse.mousePos.set(new Vector(
+        Mouse.mousePos.set(WorldVector.normalizeToCanvas(Game.ctx, world, new Vector(
             e.clientX - canvasRect.left + window.scrollX,
             e.clientY - canvasRect.top + window.scrollY
-        ));
+        )));
     }
 }

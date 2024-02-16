@@ -49,6 +49,9 @@ export default class UiButton extends UiElement {
     public onVisibilityChange(): void { }
     public onKeyDown(_e: KeyboardEvent): void { }
     public onKeyUp(_e: KeyboardEvent): void { }
+    public onKeyboardDown(_e: CustomEventInit<any>): void { }
+    public onKeyboardUp(_e: CustomEventInit<any>): void { }
+
     public fixedUpdate(): void { }
     public update(_progress: number, _delta: number): void { }
 

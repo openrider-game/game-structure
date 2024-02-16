@@ -1,35 +1,29 @@
 import { ALT, CTRL, NONE, SHIFT } from "./KeyboardConstants";
 import Control from "./Control";
 
-export default class Keyboard {
-    private controls: Map<string, Control>;
-    private holding: Map<string, boolean>;
-    private firedOnce: Map<string, boolean>;
+export default abstract class Keyboard {
+    private static controls: Map<string, Control> = new Map<string, Control>();
+    private static holding: Map<string, boolean> = new Map<string, boolean>();
+    private static firedOnce: Map<string, boolean> = new Map<string, boolean>();
 
-    public constructor() {
-        this.controls = new Map<string, Control>();
-        this.holding = new Map<string, boolean>();
-        this.firedOnce = new Map<string, boolean>();
+    public static registerControl(name: string, control: Control): void {
+        Keyboard.controls.set(name, control);
     }
 
-    public registerControl(name: string, control: Control): void {
-        this.controls.set(name, control);
-    }
-
-    public isDown(name: string): boolean {
-        let holding = !!this.holding.get(name);
-        let fireOnce = this.controls.get(name)?.fireOnce;
-        let firedOnce = !!this.firedOnce.get(name);
+    public static isDown(name: string): boolean {
+        let holding = !!Keyboard.holding.get(name);
+        let fireOnce = Keyboard.controls.get(name)?.fireOnce;
+        let firedOnce = !!Keyboard.firedOnce.get(name);
 
         if (fireOnce && !firedOnce && holding) {
-            this.firedOnce.set(name, true);
+            Keyboard.firedOnce.set(name, true);
             return true;
         }
 
         return holding && (!fireOnce || !firedOnce);
     }
 
-    private test(control: Control, e: KeyboardEvent): boolean {
+    private static test(control: Control, e: KeyboardEvent): boolean {
         let matches = control.codes.includes(e.code);
         if (matches && control.modifiers === NONE) {
             matches = !e.ctrlKey && !e.altKey && !e.shiftKey;
@@ -46,25 +40,25 @@ export default class Keyboard {
         return matches;
     }
 
-    public onKeyDown(e: KeyboardEvent): void {
-        this.controls.forEach((control, key) => {
-            if (this.test(control, e)) {
+    public static onKeyDown(e: KeyboardEvent): void {
+        Keyboard.controls.forEach((control, key) => {
+            if (Keyboard.test(control, e)) {
                 e.preventDefault();
-                if (!this.holding.get(key)) {
-                    this.holding.set(key, true);
+                if (!Keyboard.holding.get(key)) {
+                    Keyboard.holding.set(key, true);
                     document.dispatchEvent(new CustomEvent('keyboarddown', { detail: key }));
                 }
             }
         });
     }
 
-    public onKeyUp(e: KeyboardEvent): void {
-        this.controls.forEach((control, key) => {
-            if (this.test(control, e)) {
+    public static onKeyUp(e: KeyboardEvent): void {
+        Keyboard.controls.forEach((control, key) => {
+            if (Keyboard.test(control, e)) {
                 e.preventDefault();
-                if (this.holding.get(key)) {
-                    this.holding.set(key, false);
-                    this.firedOnce.set(key, false);
+                if (Keyboard.holding.get(key)) {
+                    Keyboard.holding.set(key, false);
+                    Keyboard.firedOnce.set(key, false);
                     document.dispatchEvent(new CustomEvent('keyboardup', { detail: key }));
                 }
             }

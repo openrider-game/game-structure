@@ -1,13 +1,10 @@
 import Game from "../Game";
+import EventHandler from "../interface/EventHandler";
+import Vector from "../math/Vector";
 import Keyboard from "./keyboard/Keyboard";
+import Mouse from "./mouse/Mouse";
 
-export default class EventManager {
-    public keyboard: Keyboard;
-
-    public constructor() {
-        this.keyboard = new Keyboard();
-    }
-
+export default class EventManager implements EventHandler {
     public attach(): void {
         Game.ctx.canvas.addEventListener('mousedown', e => this.onMouseDown(e));
         Game.ctx.canvas.addEventListener('mouseup', e => this.onMouseUp(e));
@@ -23,58 +20,96 @@ export default class EventManager {
 
         document.addEventListener('keydown', e => this.onKeyDown(e));
         document.addEventListener('keyup', e => this.onKeyUp(e));
+        document.addEventListener('keyboarddown', e => this.onKeyboardDown(e));
+        document.addEventListener('keyboardup', e => this.onKeyboardUp(e));
     }
 
-    private onMouseDown(e: MouseEvent): void {
+    public onEnter(): void {}
+    public onLeave(): void {}
+
+    public onMouseDown(e: MouseEvent): boolean {
         e.preventDefault();
         Game.ctx.canvas.focus();
 
+        this.setMousePos(e);
+        Mouse.lastClick = Mouse.mousePos;
+
         Game.stateManager.getCurrent()?.onMouseDown(e);
+
+        return true;
     }
 
-    private onMouseUp(e: MouseEvent): void {
+    public onMouseUp(e: MouseEvent): boolean {
         Game.stateManager.getCurrent()?.onMouseUp(e);
+
+        return true;
     }
 
-    private onMouseMove(e: MouseEvent): void {
+    public onMouseMove(e: MouseEvent): boolean {
+        this.setMousePos(e);
+
         Game.stateManager.getCurrent()?.onMouseMove(e);
+
+        return true;
     }
 
-    private onScroll(e: WheelEvent): void {
+    public onScroll(e: WheelEvent): boolean {
         e.preventDefault();
 
         Game.stateManager.getCurrent()?.onScroll(e);
+
+        return true;
     }
 
-    private onMouseEnter(e: MouseEvent): void {
+    public onMouseEnter(e: MouseEvent): void {
         Game.stateManager.getCurrent()?.onMouseEnter(e);
     }
 
-    private onMouseOut(e: MouseEvent): void {
+    public onMouseOut(e: MouseEvent): void {
         Game.stateManager.getCurrent()?.onMouseOut(e);
     }
 
-    private onContextMenu(e: MouseEvent): void {
+    public onContextMenu(e: MouseEvent): boolean {
         e.preventDefault();
 
         Game.stateManager.getCurrent()?.onContextMenu(e);
+
+        return true;
     }
 
-    private onVisibilityChange(): void {
+    public onVisibilityChange(): void {
         Game.stateManager.getCurrent()?.onVisibilityChange();
     }
 
-    private onKeyDown(e: KeyboardEvent): void {
+    public onKeyDown(e: KeyboardEvent): void {
         if (document.activeElement === Game.ctx.canvas) {
             e.preventDefault();
             Game.stateManager.getCurrent()?.onKeyDown(e);
+            Keyboard.onKeyDown(e);
         }
     }
 
-    private onKeyUp(e: KeyboardEvent): void {
+    public onKeyUp(e: KeyboardEvent): void {
         if (document.activeElement === Game.ctx.canvas) {
             e.preventDefault();
             Game.stateManager.getCurrent()?.onKeyUp(e);
+            Keyboard.onKeyUp(e);
         }
+    }
+
+    public onKeyboardDown(e: CustomEventInit<any>): void {
+        Game.stateManager.getCurrent()?.onKeyboardDown(e);
+    }
+
+    public onKeyboardUp(e: CustomEventInit<any>): void {
+        Game.stateManager.getCurrent()?.onKeyboardUp(e);
+    }
+
+    private setMousePos(e: MouseEvent): void {
+        let canvasRect = Game.ctx.canvas.getBoundingClientRect();
+        Mouse.mousePos.set(new Vector(
+            e.clientX - canvasRect.left + window.scrollX,
+            e.clientY - canvasRect.top + window.scrollY
+        ));
     }
 }

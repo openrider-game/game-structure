@@ -1,3 +1,7 @@
+import Control from "../../../core/event/keyboard/Control";
+import { KEYS } from "../../../core/event/keyboard/KeyCode";
+import Keyboard from "../../../core/event/keyboard/Keyboard";
+import { CTRL } from "../../../core/event/keyboard/KeyboardConstants";
 import State from "../../../core/state/State";
 import UiLayer from "../../../core/state/layer/UiLayer";
 import UiButton from "../../../core/ui/basic/button/UiButton";
@@ -25,6 +29,8 @@ export default class DemoEventLayer extends UiLayer {
             height: 20,
             label: 'Hello'
         }));
+
+        Keyboard.registerControl('democtrl', new Control(KEYS, CTRL));
     }
 
     private pushEvent(event: string) {
@@ -93,6 +99,14 @@ export default class DemoEventLayer extends UiLayer {
 
     public onKeyUp(e: KeyboardEvent): void {
         this.pushEvent(`onKeyUp ${e.code}`);
+    }
+
+    public onKeyboardDown(e: CustomEventInit<any>): void {
+        this.pushEvent(`onKeyboardDown ${e.detail}`);
+    }
+
+    public onKeyboardUp(e: CustomEventInit<any>): void {
+        this.pushEvent(`onKeyboardUp ${e.detail}`);
     }
 
     public fixedUpdate(): void {

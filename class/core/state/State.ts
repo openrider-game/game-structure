@@ -101,6 +101,14 @@ export default abstract class State implements LifeCycle, EventHandler {
         this.layerStack.forEach(layer => layer.onKeyUp(e));
     }
 
+    public onKeyboardDown(e: CustomEventInit<any>): void {
+        this.layerStack.forEach(layer => layer.onKeyboardDown(e));
+    }
+
+    public onKeyboardUp(e: CustomEventInit<any>): void {
+        this.layerStack.forEach(layer => layer.onKeyboardUp(e));
+    }
+
     public fixedUpdate(): void {
         this.layerStack.forEach(layer => layer.fixedUpdate());
     }

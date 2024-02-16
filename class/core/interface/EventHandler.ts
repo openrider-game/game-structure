@@ -16,4 +16,7 @@ export default interface EventHandler {
 
     onKeyDown(e: KeyboardEvent): void;
     onKeyUp(e: KeyboardEvent): void;
+
+    onKeyboardDown(e: CustomEventInit): void;
+    onKeyboardUp(e: CustomEventInit): void;
 }

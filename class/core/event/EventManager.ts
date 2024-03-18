@@ -110,10 +110,12 @@ export default class EventManager implements EventHandler {
     private setMousePos(e: MouseEvent): void {
         let world = Game.objects.get(OBJ_WORLD);
 
-        let canvasRect = Game.ctx.canvas.getBoundingClientRect();
-        Mouse.mousePos.set(WorldVector.normalizeToCanvas(Game.ctx, world, new Vector(
-            e.clientX - canvasRect.left + window.scrollX,
-            e.clientY - canvasRect.top + window.scrollY
-        )));
+        if(world) {
+            let canvasRect = Game.ctx.canvas.getBoundingClientRect();
+            Mouse.mousePos.set(WorldVector.normalizeToCanvas(Game.ctx, world, new Vector(
+                e.clientX - canvasRect.left + window.scrollX,
+                e.clientY - canvasRect.top + window.scrollY
+            )));
+        }
     }
 }

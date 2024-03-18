@@ -3,7 +3,7 @@ import LifeCycle from "../interface/LifeCycle";
 import Layer from "./layer/Layer";
 import StateManager from "./StateManager";
 
-export type StateConstructor<T extends State> = {
+export interface StateConstructor<T extends State> {
     new(manager: StateManager): T;
 }
 

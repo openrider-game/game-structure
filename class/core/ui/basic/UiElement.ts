@@ -1,6 +1,5 @@
 import EventHandler from "../../interface/EventHandler";
 import LifeCycle from "../../interface/LifeCycle";
-import Vector from "../../math/Vector";
 import Layer from "../../state/layer/Layer";
 import UiElementOptions from "./UiElementOptions";
 
@@ -26,14 +25,14 @@ export default abstract class UiElement implements LifeCycle, EventHandler {
         this.focused = false;
     }
 
-    protected abstract intersects(pos: Vector): boolean;
+    protected abstract intersects(): boolean;
     protected abstract onClick(): void;
 
     public abstract onEnter(): void;
     public abstract onLeave(): void;
 
     public onMouseDown(e: MouseEvent): boolean {
-        let intersects = this.intersects(new Vector(e.clientX, e.clientY));
+        let intersects = this.intersects();
 
         if (e.button === 0 && intersects) {
             this.focused = true;
@@ -42,8 +41,8 @@ export default abstract class UiElement implements LifeCycle, EventHandler {
         return !intersects;
     }
 
-    public onMouseUp(e: MouseEvent): boolean {
-        let intersects = this.intersects(new Vector(e.clientX, e.clientY));
+    public onMouseUp(_e: MouseEvent): boolean {
+        let intersects = this.intersects();
 
         if (intersects && this.focused) {
             this.focused = false;
@@ -53,8 +52,8 @@ export default abstract class UiElement implements LifeCycle, EventHandler {
         return !intersects;
     }
 
-    public onMouseMove(e: MouseEvent): boolean {
-        let intersects = this.intersects(new Vector(e.clientX, e.clientY));
+    public onMouseMove(_e: MouseEvent): boolean {
+        let intersects = this.intersects();
         this.hovered = intersects;
 
         if (!intersects && this.focused) {

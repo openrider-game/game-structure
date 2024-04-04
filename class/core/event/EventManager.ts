@@ -30,11 +30,17 @@ export default class EventManager implements EventHandler {
     public onLeave(): void {}
 
     public onMouseDown(e: MouseEvent): boolean {
+        let world = Game.objects.get(OBJ_WORLD);
+
         e.preventDefault();
         Game.ctx.canvas.focus();
 
         this.setMousePos(e);
         Mouse.lastClick.set(Mouse.mousePos);
+
+        if(world) {
+            Mouse.lastWorldClick.set(Mouse.worldPos);
+        }
 
         Game.stateManager.getCurrent()?.onMouseDown(e);
 
@@ -110,12 +116,14 @@ export default class EventManager implements EventHandler {
     private setMousePos(e: MouseEvent): void {
         let world = Game.objects.get(OBJ_WORLD);
 
+        let canvasRect = Game.ctx.canvas.getBoundingClientRect();
+        Mouse.mousePos.set(new Vector(
+            e.clientX - canvasRect.left + window.scrollX,
+            e.clientY - canvasRect.top + window.scrollY
+        ));
+
         if(world) {
-            let canvasRect = Game.ctx.canvas.getBoundingClientRect();
-            Mouse.mousePos.set(WorldVector.normalizeToCanvas(Game.ctx, world, new Vector(
-                e.clientX - canvasRect.left + window.scrollX,
-                e.clientY - canvasRect.top + window.scrollY
-            )));
+            Mouse.worldPos.set(WorldVector.normalizeToCanvas(Game.ctx, world, Mouse.mousePos));
         }
     }
 }

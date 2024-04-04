@@ -1,5 +1,4 @@
-import Game from "../../../Game";
-import Vector from "../../../math/Vector";
+import Mouse from "../../../event/mouse/Mouse";
 import Layer from "../../../state/layer/Layer";
 import UiElement from "../UiElement";
 import UiButtonOptions from "./UiButtonOptions";
@@ -27,14 +26,11 @@ export default class UiButton extends UiElement {
         this.textColor = options?.textColor || '#000';
     }
 
-    protected intersects(pos: Vector): boolean {
-        let canvasRect = Game.ctx.canvas.getBoundingClientRect();
-        let mousePos = new Vector(pos.x - canvasRect.left + window.scrollX, pos.y - canvasRect.top + window.scrollY);
-
-        return mousePos.x > this.x &&
-            mousePos.y > this.y &&
-            mousePos.x < this.x + this.width &&
-            mousePos.y < this.y + this.height;
+    protected intersects(): boolean {
+        return Mouse.mousePos.x > this.x &&
+            Mouse.mousePos.y > this.y &&
+            Mouse.mousePos.x < this.x + this.width &&
+            Mouse.mousePos.y < this.y + this.height;
     }
 
     protected onClick(): void {

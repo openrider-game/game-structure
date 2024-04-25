@@ -1,3 +1,4 @@
+import Game from "../../../Game";
 import Mouse from "../../../event/mouse/Mouse";
 import Layer from "../../../state/layer/Layer";
 import UiElement from "../UiElement";
@@ -11,12 +12,17 @@ export default class UiButton extends UiElement {
     public focusedColor: string | CanvasGradient | CanvasPattern;
     public textColor: string | CanvasGradient | CanvasPattern;
 
-    private callback: () => void;
-
     public constructor(layer: Layer, callback: () => void, options?: UiButtonOptions) {
         super(layer, options);
 
-        this.callback = callback;
+        this.events = {
+            hoverOn: () => {
+                Game.ctx.canvas.dataset.cursor = Game.ctx.canvas.style.cursor;
+                Game.ctx.canvas.style.cursor = 'pointer';
+            },
+            hoverOff: () => Game.ctx.canvas.style.cursor = Game.ctx.canvas.dataset.cursor!,
+            click: callback
+        };
 
         this.label = options?.label || 'Button';
 
@@ -31,10 +37,6 @@ export default class UiButton extends UiElement {
             Mouse.mousePos.y > this.y &&
             Mouse.mousePos.x < this.x + this.width &&
             Mouse.mousePos.y < this.y + this.height;
-    }
-
-    protected onClick(): void {
-        this.callback();
     }
 
     public onEnter(): void { }

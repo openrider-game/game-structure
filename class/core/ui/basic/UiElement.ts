@@ -1,7 +1,7 @@
 import EventHandler from "../../interface/EventHandler";
 import LifeCycle from "../../interface/LifeCycle";
 import Layer from "../../state/layer/Layer";
-import UiElementOptions from "./UiElementOptions";
+import UiElementOptions, { UiElementEvents } from "./UiElementOptions";
 
 export default abstract class UiElement implements LifeCycle, EventHandler {
     public layer: Layer;
@@ -12,6 +12,7 @@ export default abstract class UiElement implements LifeCycle, EventHandler {
     public height: number;
     public hovered: boolean;
     public focused: boolean;
+    events: UiElementEvents | undefined;
 
     public constructor(layer: Layer, options?: UiElementOptions) {
         this.layer = layer;
@@ -23,19 +24,44 @@ export default abstract class UiElement implements LifeCycle, EventHandler {
 
         this.hovered = false;
         this.focused = false;
+
+        this.events = options?.events;
     }
 
     protected abstract intersects(): boolean;
-    protected abstract onClick(): void;
 
     public abstract onEnter(): void;
     public abstract onLeave(): void;
+
+    private focus(on: boolean): void {
+        if(this.focused === on) return;
+
+        this.focused = on;
+
+        if(on && this.events?.focusOn) {
+            this.events.focusOn();
+        } else if(this.events?.focusOff) {
+            this.events.focusOff();
+        }
+    }
+
+    private hover(on: boolean) {
+        if(this.hovered === on) return;
+
+        this.hovered = on;
+
+        if(on && this.events?.hoverOn) {
+            this.events.hoverOn();
+        } else if(this.events?.hoverOff) {
+            this.events.hoverOff();
+        }
+    }
 
     public onMouseDown(e: MouseEvent): boolean {
         let intersects = this.intersects();
 
         if (e.button === 0 && intersects) {
-            this.focused = true;
+            this.focus(true);
         }
 
         return !intersects;
@@ -45,8 +71,11 @@ export default abstract class UiElement implements LifeCycle, EventHandler {
         let intersects = this.intersects();
 
         if (intersects && this.focused) {
-            this.focused = false;
-            this.onClick();
+            this.focus(false);
+
+            if(this.events?.click) {
+                this.events.click();
+            }
         }
 
         return !intersects;
@@ -54,10 +83,10 @@ export default abstract class UiElement implements LifeCycle, EventHandler {
 
     public onMouseMove(_e: MouseEvent): boolean {
         let intersects = this.intersects();
-        this.hovered = intersects;
+        this.hover(intersects);
 
         if (!intersects && this.focused) {
-            this.focused = false;
+            this.focus(false);
         }
 
         return !intersects;
@@ -67,8 +96,8 @@ export default abstract class UiElement implements LifeCycle, EventHandler {
     public abstract onMouseEnter(e: MouseEvent): void;
 
     public onMouseOut(_e: MouseEvent): void {
-        this.focused = false;
-        this.hovered = false;
+        this.focus(false);
+        this.hover(false);
     }
 
     public abstract onContextMenu(e: MouseEvent): boolean;

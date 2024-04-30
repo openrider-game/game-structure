@@ -1,9 +1,10 @@
 import EventHandler from "../../interface/EventHandler";
 import LifeCycle from "../../interface/LifeCycle";
 import Layer from "../../state/layer/Layer";
+import UiAnimation from "../animation/UiAnimation";
 import UiElementOptions, { UiElementEvents } from "./UiElementOptions";
 
-export default abstract class UiElement implements LifeCycle, EventHandler {
+export default abstract class UiElement<T extends UiElement<T>> implements LifeCycle, EventHandler {
     public layer: Layer;
 
     public x: number;
@@ -12,7 +13,8 @@ export default abstract class UiElement implements LifeCycle, EventHandler {
     public height: number;
     public hovered: boolean;
     public focused: boolean;
-    events: UiElementEvents | undefined;
+    public events: UiElementEvents | undefined;
+    public animation?: UiAnimation<T>;
 
     public constructor(layer: Layer, options?: UiElementOptions) {
         this.layer = layer;
@@ -107,7 +109,14 @@ export default abstract class UiElement implements LifeCycle, EventHandler {
     public abstract onKeyboardDown(e: CustomEventInit<any>): void;
     public abstract onKeyboardUp(e: CustomEventInit<any>): void;
 
+    public update(_progress: number, delta: number): void {
+        this.animation?.update(delta);
+
+        if(this.animation?.done) {
+            this.animation = undefined;
+        }
+    };
+
     public abstract fixedUpdate(): void;
-    public abstract update(progress: number, delta: number): void;
     public abstract render(ctx: CanvasRenderingContext2D): void;
 }

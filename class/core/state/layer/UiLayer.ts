@@ -3,12 +3,16 @@ import State from "../State";
 import Layer from "./Layer";
 
 export default abstract class UiLayer extends Layer {
-    public uiElements: Array<UiElement>;
+    public uiElements: Array<UiElement<any>>;
 
     public constructor(state: State) {
         super(state);
 
-        this.uiElements = new Array<UiElement>();
+        this.uiElements = new Array<UiElement<any>>();
+    }
+
+    public onLeave(): void {
+        this.uiElements = [];
     }
 
     public render(ctx: CanvasRenderingContext2D): void {
@@ -61,5 +65,9 @@ export default abstract class UiLayer extends Layer {
         }
 
         return true;
+    }
+
+    public update(_progress: number, delta: number): void {
+        this.uiElements.forEach(uiElement => uiElement.animation?.update(delta));
     }
 }

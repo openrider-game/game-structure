@@ -4,7 +4,7 @@ import Layer from "../../../state/layer/Layer";
 import UiElement from "../UiElement";
 import UiButtonOptions from "./UiButtonOptions";
 
-export default class UiButton extends UiElement {
+export default class UiButton extends UiElement<UiButton> {
     public label: string;
 
     public color: string | CanvasGradient | CanvasPattern;
@@ -51,7 +51,6 @@ export default class UiButton extends UiElement {
     public onKeyboardUp(_e: CustomEventInit<any>): void { }
 
     public fixedUpdate(): void { }
-    public update(_progress: number, _delta: number): void { }
 
     public render(ctx: CanvasRenderingContext2D): void {
         ctx.save();

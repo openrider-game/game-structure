@@ -1,9 +1,19 @@
 import Interpolation from "../../math/Interpolation";
 import UiElement from "../basic/UiElement";
+import UiElementProperty, { UiElementPropertyDimension, UiElementPropertyType } from "../basic/UiElementProperty";
+
+export interface UiAnimationDescription<T extends UiElement<T>> {
+    targetProperty: UiElementProperty<T>,
+    targetValue: string,
+    animationType?: UiAnimationType,
+
+    startPropertyValue?: UiElementProperty<T>,
+    targetPropertyValue?: UiElementProperty<T>,
+    dimension?: UiElementPropertyDimension
+}
 
 interface UiAnimationOptions {
-    callback?: Function,
-    animationType?: UiAnimationType
+    callback?: Function
 }
 
 export enum UiAnimationType {
@@ -14,36 +24,32 @@ export enum UiAnimationType {
 }
 
 export default class UiAnimation<T extends UiElement<T>> {
-    private uiElement: T;
-    private property: keyof T;
-    private targetValue: any;
+    private animationDescriptions: Array<UiAnimationDescription<T>>;
+
     private duration: number;
 
     private callback?: Function;
-    private animationType?: UiAnimationType;
 
-    private startTime?: number;
-    private startValue?: any;
     private currentProgress: number;
 
     public done: boolean;
 
-    public constructor(uiElement: T, property: string, targetValue: any, duration: number, options?: UiAnimationOptions) {
-        if(!uiElement.hasOwnProperty(property)) {
-            throw new Error(`Invalid animation property: ${property}`);
-        }
-
+    public constructor(animationDescriptions: Array<UiAnimationDescription<T>>, duration: number, options: UiAnimationOptions) {
         if(duration === 0) {
             throw new Error('Duration cannot be 0');
         }
 
-        this.uiElement = uiElement;
-        this.property = property as keyof T;
-        this.targetValue = targetValue;
+        this.animationDescriptions = animationDescriptions;
+        this.animationDescriptions.forEach(animationDescription => {
+            animationDescription.dimension = animationDescription.targetProperty.dimension;
+            animationDescription.startPropertyValue = animationDescription.targetProperty.clone();
+            animationDescription.targetPropertyValue = animationDescription.targetProperty.clone();
+            animationDescription.targetPropertyValue.setValue(animationDescription.targetValue);
+        });
+
         this.duration = duration;
 
         this.callback = options?.callback;
-        this.animationType = options?.animationType;
 
         this.currentProgress = 0;
         this.done = false;
@@ -53,34 +59,40 @@ export default class UiAnimation<T extends UiElement<T>> {
     public update(delta: number) {
         if(this.done) return;
 
-        if(!this.startTime) {
-            this.startTime = performance.now();
-            this.startValue = this.uiElement[this.property];
-        }
-
         let percentProgress = this.currentProgress / this.duration;
 
-        switch(this.animationType) {
-            case UiAnimationType.EaseIn: {
-                percentProgress = Interpolation.easeIn(percentProgress);
-                break;
-            }
-            case UiAnimationType.EaseOut: {
-                percentProgress = Interpolation.easeOut(percentProgress);
-                break;
-            }
-            case UiAnimationType.EaseInOut: {
-                percentProgress = Interpolation.easeInOut(percentProgress);
-                break;
-            }
-        }
+        this.animationDescriptions.forEach(animationDescription => {
+            let interpolationProgress: number = percentProgress;
 
-        (this.uiElement as any)[this.property] = Interpolation.linear(this.startValue, this.targetValue, percentProgress);
+            switch(animationDescription.animationType) {
+                case UiAnimationType.EaseIn: {
+                    interpolationProgress = Interpolation.easeIn(percentProgress);
+                    break;
+                }
+                case UiAnimationType.EaseOut: {
+                    interpolationProgress = Interpolation.easeOut(percentProgress);
+                    break;
+                }
+                case UiAnimationType.EaseInOut: {
+                    interpolationProgress = Interpolation.easeInOut(percentProgress);
+                    break;
+                }
+            }
+
+            let computedStartValue = animationDescription.startPropertyValue!.computeValue();
+            let computedTargetValue = animationDescription.targetPropertyValue!.computeValue();
+
+            let interpolatedValue = Interpolation.linear(computedStartValue, computedTargetValue, interpolationProgress);
+
+            animationDescription.targetProperty.setValue(`${interpolatedValue}${UiElementPropertyType.Pixel}`);
+        });
 
         this.currentProgress += delta;
 
         if(this.currentProgress > this.duration) {
-            (this.uiElement as any)[this.property] = this.targetValue;
+            this.animationDescriptions.forEach(animationDescription => {
+                animationDescription.targetProperty.setValue(animationDescription.targetValue);
+            });
 
             this.done = true;
 

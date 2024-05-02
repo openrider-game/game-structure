@@ -33,10 +33,10 @@ export default class UiButton extends UiElement<UiButton> {
     }
 
     protected intersects(): boolean {
-        return Mouse.mousePos.x > this.x &&
-            Mouse.mousePos.y > this.y &&
-            Mouse.mousePos.x < this.x + this.width &&
-            Mouse.mousePos.y < this.y + this.height;
+        return Mouse.mousePos.x > this.x.getValue() &&
+            Mouse.mousePos.y > this.y.getValue() &&
+            Mouse.mousePos.x < this.x.getValue() + this.width.getValue() &&
+            Mouse.mousePos.y < this.y.getValue() + this.height.getValue();
     }
 
     public onEnter(): void { }
@@ -57,7 +57,7 @@ export default class UiButton extends UiElement<UiButton> {
 
         ctx.lineWidth = 2;
 
-        ctx.strokeRect(this.x, this.y, this.width, this.height);
+        ctx.strokeRect(this.x.getValue(), this.y.getValue(), this.width.getValue(), this.height.getValue());
 
         let labelMetrics = ctx.measureText(this.label);
         let labelWidth = labelMetrics.width;
@@ -66,12 +66,12 @@ export default class UiButton extends UiElement<UiButton> {
         ctx.fillStyle = this.hovered ? (this.focused ? this.focusedColor : this.hoveredColor) : this.color;
 
         ctx.beginPath();
-        ctx.rect(this.x, this.y, this.width, this.height);
+        ctx.rect(this.x.getValue(), this.y.getValue(), this.width.getValue(), this.height.getValue());
         ctx.fill();
 
         ctx.fillStyle = this.textColor;
 
-        ctx.fillText(this.label, this.x + (this.width - labelWidth) / 2, this.y + (this.height + labelHeight) / 2);
+        ctx.fillText(this.label, this.x.getValue() + (this.width.getValue() - labelWidth) / 2, this.y.getValue() + (this.height.getValue() + labelHeight) / 2);
 
         ctx.restore();
     }

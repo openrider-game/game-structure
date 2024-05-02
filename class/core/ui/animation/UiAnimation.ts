@@ -1,10 +1,16 @@
 import Interpolation from "../../math/Interpolation";
 import UiElement from "../basic/UiElement";
-import { EASE_IN, EASE_IN_OUT, EASE_OUT } from "./UiAnimationConstants";
 
 interface UiAnimationOptions {
     callback?: Function,
-    animationType?: string
+    animationType?: UiAnimationType
+}
+
+export enum UiAnimationType {
+    Linear,
+    EaseIn,
+    EaseOut,
+    EaseInOut
 }
 
 export default class UiAnimation<T extends UiElement<T>> {
@@ -14,7 +20,7 @@ export default class UiAnimation<T extends UiElement<T>> {
     private duration: number;
 
     private callback?: Function;
-    private animationType?: string;
+    private animationType?: UiAnimationType;
 
     private startTime?: number;
     private startValue?: any;
@@ -55,15 +61,15 @@ export default class UiAnimation<T extends UiElement<T>> {
         let percentProgress = this.currentProgress / this.duration;
 
         switch(this.animationType) {
-            case EASE_IN: {
+            case UiAnimationType.EaseIn: {
                 percentProgress = Interpolation.easeIn(percentProgress);
                 break;
             }
-            case EASE_OUT: {
+            case UiAnimationType.EaseOut: {
                 percentProgress = Interpolation.easeOut(percentProgress);
                 break;
             }
-            case EASE_IN_OUT: {
+            case UiAnimationType.EaseInOut: {
                 percentProgress = Interpolation.easeInOut(percentProgress);
                 break;
             }

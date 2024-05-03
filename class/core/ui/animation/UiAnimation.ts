@@ -20,7 +20,10 @@ export enum UiAnimationType {
     Linear,
     EaseIn,
     EaseOut,
-    EaseInOut
+    EaseInOut,
+    EaseInCubic,
+    EaseOutCubic,
+    EaseInOutCubic
 }
 
 export default class UiAnimation<T extends UiElement<T>> {
@@ -62,22 +65,7 @@ export default class UiAnimation<T extends UiElement<T>> {
         let percentProgress = this.currentProgress / this.duration;
 
         this.animationDescriptions.forEach(animationDescription => {
-            let interpolationProgress: number = percentProgress;
-
-            switch(animationDescription.animationType) {
-                case UiAnimationType.EaseIn: {
-                    interpolationProgress = Interpolation.easeIn(percentProgress);
-                    break;
-                }
-                case UiAnimationType.EaseOut: {
-                    interpolationProgress = Interpolation.easeOut(percentProgress);
-                    break;
-                }
-                case UiAnimationType.EaseInOut: {
-                    interpolationProgress = Interpolation.easeInOut(percentProgress);
-                    break;
-                }
-            }
+            let interpolationProgress = this.computeInterpolation(animationDescription, percentProgress);
 
             let computedStartValue = animationDescription.startPropertyValue!.computeValue();
             let computedTargetValue = animationDescription.targetPropertyValue!.computeValue();
@@ -98,6 +86,32 @@ export default class UiAnimation<T extends UiElement<T>> {
 
             if(this.callback) {
                 this.callback();
+            }
+        }
+    }
+
+    private computeInterpolation(animationDescription: UiAnimationDescription<T>, percentProgress: number): number {
+        switch(animationDescription.animationType) {
+            case UiAnimationType.EaseIn: {
+                return Interpolation.easeIn(percentProgress);
+            }
+            case UiAnimationType.EaseOut: {
+                return Interpolation.easeOut(percentProgress);
+            }
+            case UiAnimationType.EaseInOut: {
+                return Interpolation.easeInOut(percentProgress);
+            }
+            case UiAnimationType.EaseInCubic: {
+                return Interpolation.easeInCubic(percentProgress);
+            }
+            case UiAnimationType.EaseOutCubic: {
+                return Interpolation.easeOutCubic(percentProgress);
+            }
+            case UiAnimationType.EaseInOutCubic: {
+                return Interpolation.easeInOutCubic(percentProgress);
+            }
+            default: {
+                return percentProgress;
             }
         }
     }

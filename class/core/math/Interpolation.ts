@@ -5,12 +5,12 @@ export default class Interpolation {
         return startValue + (endValue - startValue) * progress;
     }
 
-    public static easeIn(progress: number) {
-        return progress * progress;
-    }
-
     public static flip(value: number) {
         return 1 - value;
+    }
+
+    public static easeIn(progress: number) {
+        return progress * progress;
     }
 
     public static easeOut(progress: number) {
@@ -19,5 +19,17 @@ export default class Interpolation {
 
     public static easeInOut(progress: number) {
         return this.linear(this.easeIn(progress), this.easeOut(progress), progress);
+    }
+
+    public static easeInCubic(progress: number) {
+        return progress * progress * progress;
+    }
+
+    public static easeOutCubic(progress: number) {
+        return this.flip(this.easeInCubic(this.flip(progress)));
+    }
+
+    public static easeInOutCubic(progress: number) {
+        return this.linear(this.easeInCubic(progress), this.easeOutCubic(progress), progress);
     }
 }

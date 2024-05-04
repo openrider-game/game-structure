@@ -6,10 +6,18 @@ export interface UiAnimationDescription<T extends UiElement<T>> {
     targetProperty: UiElementProperty<T>,
     targetValue: string,
     animationType?: UiAnimationType,
+    bezierPoints?: UiAnimationBezierPoints,
 
     startPropertyValue?: UiElementProperty<T>,
     targetPropertyValue?: UiElementProperty<T>,
     dimension?: UiElementPropertyDimension
+}
+
+interface UiAnimationBezierPoints {
+    p1: number,
+    p2: number,
+    p3: number,
+    p4: number
 }
 
 interface UiAnimationOptions {
@@ -23,7 +31,8 @@ export enum UiAnimationType {
     EaseInOut,
     EaseInCubic,
     EaseOutCubic,
-    EaseInOutCubic
+    EaseInOutCubic,
+    CubicBezier
 }
 
 export default class UiAnimation<T extends UiElement<T>> {
@@ -38,7 +47,7 @@ export default class UiAnimation<T extends UiElement<T>> {
     public done: boolean;
 
     public constructor(animationDescriptions: Array<UiAnimationDescription<T>>, duration: number, options: UiAnimationOptions) {
-        if(duration === 0) {
+        if (duration === 0) {
             throw new Error('Duration cannot be 0');
         }
 
@@ -60,7 +69,7 @@ export default class UiAnimation<T extends UiElement<T>> {
     }
 
     public update(delta: number) {
-        if(this.done) return;
+        if (this.done) return;
 
         let percentProgress = this.currentProgress / this.duration;
 
@@ -77,21 +86,21 @@ export default class UiAnimation<T extends UiElement<T>> {
 
         this.currentProgress += delta;
 
-        if(this.currentProgress > this.duration) {
+        if (this.currentProgress > this.duration) {
             this.animationDescriptions.forEach(animationDescription => {
                 animationDescription.targetProperty.setValue(animationDescription.targetValue);
             });
 
             this.done = true;
 
-            if(this.callback) {
+            if (this.callback) {
                 this.callback();
             }
         }
     }
 
     private computeInterpolation(animationDescription: UiAnimationDescription<T>, percentProgress: number): number {
-        switch(animationDescription.animationType) {
+        switch (animationDescription.animationType) {
             case UiAnimationType.EaseIn: {
                 return Interpolation.easeIn(percentProgress);
             }
@@ -109,6 +118,19 @@ export default class UiAnimation<T extends UiElement<T>> {
             }
             case UiAnimationType.EaseInOutCubic: {
                 return Interpolation.easeInOutCubic(percentProgress);
+            }
+            case UiAnimationType.CubicBezier: {
+                if (!animationDescription.bezierPoints) {
+                    throw new Error('No points set for bezier curve animation');
+                }
+
+                let points = animationDescription.bezierPoints;
+
+                if (points.p1 < 0 || points.p1 > 1 || points.p3 < 0 || points.p3 > 1) {
+                    throw new Error('Out of bounds bezier points');
+                }
+
+                return Interpolation.cubicBezier(percentProgress, points.p1, points.p2, points.p3, points.p4);
             }
             default: {
                 return percentProgress;

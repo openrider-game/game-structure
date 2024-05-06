@@ -1,6 +1,8 @@
-import Vector from "./Vector";
+import UnitBezier from "./UnitBezier";
 
 export default class Interpolation {
+    private static bezierCache: Map<string, UnitBezier> = new Map<string, UnitBezier>();
+
     private constructor() { /* static class */ }
 
     public static linear(startValue: number, endValue: number, progress: number): number {
@@ -36,16 +38,16 @@ export default class Interpolation {
     }
 
     public static cubicBezier(progress: number, p1: number, p2: number, p3: number, p4: number): number {
-        let point0 = new Vector(0, 0);
-        let point1 = new Vector(p1, p2);
-        let point2 = new Vector(p3, p4);
-        let point3 = new Vector(1, 1);
+        let bezierCacheKey = `${p1},${p2},${p3},${p4}`;
+        let bezierCurve: UnitBezier;
 
-        let resultingVector = point0.add
-            (point0.scale(-3).add(point1.scale(3)).scale(progress)).add
-            (point0.scale(3).add(point1.scale(-6)).add(point2.scale(3)).scale(progress * progress)).add
-            (point0.scale(-1).add(point1.scale(3)).add(point2.scale(-3)).add(point3).scale(progress * progress * progress));
+        if(this.bezierCache.has(bezierCacheKey)) {
+            bezierCurve = this.bezierCache.get(bezierCacheKey)!;
+        } else {
+            bezierCurve = new UnitBezier(p1, p2, p3, p4);
+            this.bezierCache.set(bezierCacheKey, bezierCurve);
+        }
 
-        return resultingVector.y;
+        return bezierCurve.solve(progress);
     }
 }
